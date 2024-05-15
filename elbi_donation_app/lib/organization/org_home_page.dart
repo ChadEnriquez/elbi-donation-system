@@ -55,7 +55,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
               },
               child: const Card(
                 child: ListTile(
-                  title: Text('Food', textAlign: TextAlign.center),
+                  title: Text('- Organization 1 -', textAlign: TextAlign.center),
                 ),
               ),
             ),
@@ -68,7 +68,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
               },
               child: const Card(
                 child: ListTile(
-                  title: Text('Clothes', textAlign: TextAlign.center),
+                  title: Text('- Organization 2 -', textAlign: TextAlign.center),
                 ),
               ),
             ),
@@ -81,7 +81,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
               },
               child: const Card(
                 child: ListTile(
-                  title: Text('Money', textAlign: TextAlign.center),
+                  title: Text('- Organization 3 -', textAlign: TextAlign.center),
                 ),
               ),
             ),
