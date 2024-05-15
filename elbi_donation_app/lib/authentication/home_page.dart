@@ -32,13 +32,13 @@ class _HomePageState extends State<HomePage> {
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
-              backgroundColor: const Color.fromARGB(255, 53, 53, 53),
+              backgroundColor:  Color.fromARGB(255, 53, 53, 53),
               body: Center(
                 child: CircularProgressIndicator(),
               ),
             );
           } else if (!snapshot.hasData) {
-            return const SignInPage();
+            // return const SignInPage();
           } return Scaffold(
             backgroundColor: const Color.fromARGB(255, 53, 53, 53),
             body: Center(
