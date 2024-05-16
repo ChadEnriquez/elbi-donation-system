@@ -1,18 +1,16 @@
-import 'package:elbi_donation_app/authentication/signin_adminpage.dart';
-import 'package:elbi_donation_app/authentication/signin_orgpage.dart';
 import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'signup_page.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class SignInOrgPage extends StatefulWidget {
+  const SignInOrgPage({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<SignInOrgPage> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInPageState extends State<SignInOrgPage> {
   final _formKey = GlobalKey<FormState>();
   String? email;
   String? password;
@@ -21,6 +19,14 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: 100, horizontal: 30),
@@ -33,43 +39,7 @@ class _SignInPageState extends State<SignInPage> {
                 emailField,
                 passwordField,
                 showSignInErrorMessage ? signInErrorMessage : Container(),
-                submitButton,
-                SizedBox(
-                  height: 20.0, // Adjust as needed
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 150.0, // Adjust as needed
-                      child: Container(
-                        color: Colors.grey.withOpacity(0.2), // Change color as needed
-                        height: 1.0,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        'or',
-                        style: TextStyle(
-                          color: Colors.grey.withOpacity(0.5), // Change color as needed
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 150.0, // Adjust as needed
-                      child: Container(
-                        color: Colors.grey.withOpacity(0.2), // Change color as needed
-                        height: 1.0,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20.0, // Adjust as needed
-                ),
-                signInOptions,
-                signUpButton,
+                submitButton
               ],
             ),
           ),
@@ -166,12 +136,7 @@ class _SignInPageState extends State<SignInPage> {
         children: [
           TextButton(
             onPressed: () {
-              Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SignInOrgPage(),
-            ),
-          );
+              // Handle sign in as organization
             },
             child: const Text(
               "Sign in as an Organization",
@@ -183,12 +148,7 @@ class _SignInPageState extends State<SignInPage> {
 
           TextButton(
             onPressed: () {
-              Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SignInAdminPage(),
-            ),
-          );
+              // Handle sign in as admin
             },
             child: const Text(
               "Sign in as Admin",

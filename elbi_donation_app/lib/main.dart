@@ -34,9 +34,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomePage(),
       },
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
-      ),
+      theme: ThemeData.dark()
     );
   }
 }
