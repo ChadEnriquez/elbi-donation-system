@@ -1,5 +1,8 @@
 
-import 'package:elbi_donation_app/authentication/home_page.dart';
+import 'package:elbi_donation_app/admin/admin_home_page.dart';
+import 'package:elbi_donation_app/authentication/signin_page.dart';
+import 'package:elbi_donation_app/donor/donor_home_page.dart';
+import 'package:elbi_donation_app/organization/org_home_page.dart';
 import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +35,10 @@ class MyApp extends StatelessWidget {
       title: 'Elbi Donation System',
       initialRoute: '/',
       routes: {
-        '/': (context) => const HomePage(),
+        '/': (context) => const SignInPage(), 
+        '/donorhome': (context) => const DonorHomePage(),
+        '/orghome': (context) => const OrgHomePage(),
+        '/adminhome': (context) => const AdminHomePage(),
       },
       theme: ThemeData.dark()
     );

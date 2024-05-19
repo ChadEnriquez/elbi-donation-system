@@ -1,5 +1,7 @@
 
+import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class OrgHomePage extends StatefulWidget {
@@ -22,7 +24,46 @@ class _OrgHomePageState extends State<OrgHomePage> {
       ),
       body: const Center(
         child: Text("Organization Homepage", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
-      )
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 48, 48, 48),
+              ),
+              child: Text('Navigation',
+                  style: TextStyle(color: Colors.white)),
+            ),
+            ListTile(
+              title: Text('For approvals'),
+              onTap: () {
+                
+              },
+            ),
+            ListTile(
+              title: Text('View Donors'),
+              onTap: () {
+                
+              },
+            ),
+            ListTile(
+              title: Text('View Organizations'),
+              onTap: () {
+                
+              },
+            ),
+            ListTile(
+              title: Text('Logout'),
+              onTap: () {
+                context.read<UserAuthProvider>().signOut();
+            Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

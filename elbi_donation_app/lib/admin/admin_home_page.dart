@@ -67,10 +67,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               title: Text('Logout'),
               onTap: () {
                 context.read<UserAuthProvider>().signOut();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignInPage()),
-                );
+            Navigator.pop(context);
               },
             ),
           ],

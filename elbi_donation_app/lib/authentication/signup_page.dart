@@ -15,7 +15,6 @@ class SignUpPage extends StatefulWidget {
 class _SignUpState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
   String? name;
-  String? nameofOrg;
   String? email;
   String? password;
   String? address;
@@ -36,11 +35,7 @@ class _SignUpState extends State<SignUpPage> {
               children: [
                 heading,
                 userTypeDropdown,
-                if (selectedUserType != null) ..._buildSignupFields(selectedUserType!),
-                SizedBox(
-                  height: 20.0, // Adjust as needed
-                ),
-                submitButton,
+                if (selectedUserType != null) ..._buildSignupFields(selectedUserType!)
               ],
             ),
           ),
@@ -89,20 +84,25 @@ class _SignUpState extends State<SignUpPage> {
           SizedBox(height: 20),
           addressField,
           SizedBox(height: 20),
-          contactField
+          contactField,
+          SizedBox(height: 20),
+          submitButton
         ];
       case UserType.Organization:
         return [
           SizedBox(height: 20),
           nameOrgField,
           SizedBox(height: 20),
-          emailField,
+          emailOrgField,
           SizedBox(height: 20),
           passwordField,
           SizedBox(height: 20),
           addressField,
           SizedBox(height: 20),
-          contactField
+          contactField,
+          //, proof(photo daw huhuhu pano gawin itue)
+          SizedBox(height: 20),
+          submitButtonOrg
         ];
     }
   }
@@ -111,6 +111,20 @@ class _SignUpState extends State<SignUpPage> {
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           labelText: 'Email',
+        ),
+        onSaved: (value) => setState(() => email = value),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter a valid email';
+          }
+          return null;
+        },
+      );
+  Widget get emailOrgField => TextFormField(
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'Email',
+          hintText: 'org@organization.com',
         ),
         onSaved: (value) => setState(() => email = value),
         validator: (value) {
@@ -157,7 +171,7 @@ class _SignUpState extends State<SignUpPage> {
           decoration: const InputDecoration(
               border: OutlineInputBorder(),
               label: Text("Name of Organization")),
-          onSaved: (value) => setState(() => nameofOrg = value),
+          onSaved: (value) => setState(() => name = value),
           validator: (value) {
             if (value == null || value.isEmpty) {
               return "Please enter your organization's name";
@@ -204,7 +218,22 @@ class _SignUpState extends State<SignUpPage> {
             await context
                 .read<UserAuthProvider>()
                 .authService
-                .signUp(email!, password!);
+                .signUp(email!, password!, name!, address!, contactno!);
+
+            // check if the widget hasn't been disposed of after an asynchronous action
+            if (mounted) Navigator.pop(context);
+          }
+        },
+        child: const Text('Sign Up'));
+
+  Widget get submitButtonOrg => ElevatedButton(
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState!.save();
+            await context
+                .read<UserAuthProvider>()
+                .authService
+                .signUpOrg(email!, password!, name!, address!, contactno!);
 
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);

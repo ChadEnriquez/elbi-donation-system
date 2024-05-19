@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FirebaseAuthApi {
@@ -14,9 +15,49 @@ class FirebaseAuthApi {
     return auth.currentUser;
   }
 
-  Future<void> signUp(String email, String password) async {
+  Future<void> signUp(String email, String password, String name, String address, String contactno) async {
+    UserCredential credential;
     try {
-      await auth.createUserWithEmailAndPassword(email: email, password: password);
+      credential = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Save user data to Firestore
+      await FirebaseFirestore.instance
+          .collection('donors')
+          .doc(credential.user!.uid)
+          .set({
+        'name': name,
+        'email': email,
+        'address': address,
+        'contactno': contactno,
+      });
+    } on FirebaseException catch (e) {
+      print("Firebase Exception: ${e.code} : ${e.message}");
+    } catch (e) {
+      print("Error 001: $e");
+    }
+  }
+
+    Future<void> signUpOrg(String email, String password, String name, String address, String contactno) async {
+    UserCredential credential;
+    try {
+      credential = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      // Save user data to Firestore
+      await FirebaseFirestore.instance
+          .collection('organization')
+          .doc(credential.user!.uid)
+          .set({
+        'name': name,
+        'email': email,
+        'address': address,
+        'contactno': contactno,
+      });
     } on FirebaseException catch (e) {
       print("Firebase Exception: ${e.code} : ${e.message}");
     } catch (e) {
