@@ -39,6 +39,8 @@ dependencies:
   firebase_core: ^2.31.0
   cloud_firestore: ^4.17.2
   firebase_auth: ^4.19.5
+  intl_phone_number_input: ^0.7.4
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:

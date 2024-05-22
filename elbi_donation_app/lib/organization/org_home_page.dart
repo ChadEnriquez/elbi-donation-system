@@ -1,8 +1,4 @@
-
-import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 
 class OrgHomePage extends StatefulWidget {
   const OrgHomePage({super.key});
@@ -17,52 +13,80 @@ class _OrgHomePageState extends State<OrgHomePage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 53, 53, 53),
       appBar: AppBar(
-        title: const Text("Organization", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),),
+        title: const Text(
+          "Organization",
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         backgroundColor: const Color.fromARGB(255, 48, 48, 48),
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: const Center(
-        child: Text("Organization Homepage", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 48, 48, 48),
+      body: Column(
+        children: [
+          const Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 20.0),
+              child: Text("Organization Homepage",
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
+            ),
+          ),
+          const Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 10.0),
+              child: Text("List of Donations",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal)),
+            ),
+          ),
+          const SizedBox(height: 20.0),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: InkWell(
+              onTap: () {
+                // Handle your click event here
+              },
+              child: const Card(
+                child: ListTile(
+                  title: Text('- Organization 1 -', textAlign: TextAlign.center),
+                ),
               ),
-              child: Text('Navigation',
-                  style: TextStyle(color: Colors.white)),
             ),
-            ListTile(
-              title: Text('For approvals'),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: InkWell(
               onTap: () {
-                
+                // Handle your click event here
               },
+              child: const Card(
+                child: ListTile(
+                  title: Text('- Organization 2 -', textAlign: TextAlign.center),
+                ),
+              ),
             ),
-            ListTile(
-              title: Text('View Donors'),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: InkWell(
               onTap: () {
-                
+                // Handle your click event here
               },
+              child: const Card(
+                child: ListTile(
+                  title: Text('- Organization 3 -', textAlign: TextAlign.center),
+                ),
+              ),
             ),
-            ListTile(
-              title: Text('View Organizations'),
-              onTap: () {
-                
-              },
-            ),
-            ListTile(
-              title: Text('Logout'),
-              onTap: () {
-                context.read<UserAuthProvider>().signOut();
-            Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

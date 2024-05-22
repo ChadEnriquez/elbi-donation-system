@@ -1,5 +1,5 @@
 import 'package:elbi_donation_app/admin/admin_home_page.dart';
-import 'package:elbi_donation_app/donor/donor_home_page.dart';
+import 'package:elbi_donation_app/donor/donor_pages/donor_home_page.dart';
 import 'package:elbi_donation_app/organization/org_home_page.dart';
 import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
