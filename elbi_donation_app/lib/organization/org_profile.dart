@@ -10,14 +10,14 @@ class OrgProfilePage extends StatefulWidget {
 
 class OrgProfilePageState extends State<OrgProfilePage> {
   User? organization;
-  
+
   @override
   void initState() {
     super.initState();
     organization = FirebaseAuth.instance.currentUser;
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -40,34 +40,50 @@ class OrgProfilePageState extends State<OrgProfilePage> {
           }
 
           final orgData = snapshot.data!.data() as Map<String, dynamic>;
-          print(orgData);
           final orgAddress = orgData['address'];
           final orgPhone = orgData['contactno'];
           final orgEmail = orgData['email'];
           final orgName = orgData['name'];
-          // final orgApproval = orgData['approval'];
-          // final orgDescription = orgData['description'];
-          // final orgDonations = orgData['donations'];
-          // final orgProof = orgData['proof'];
-          // final orgStatus = orgData['status'];
-          
 
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Organization Name: ${orgName ?? 'No Organization Name Found'}", style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 20),
-                  Text("Email: ${orgEmail ?? 'No Organization Email Found'}", style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 20),
-                  Text("Address: ${orgAddress?? 'No Organization Address Found'}", style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 20),
-                  Text("Phone: ${orgPhone?? 'No Organization Phone Number Found'}", style: const TextStyle(fontSize: 16)),
-                  const SizedBox(height: 20),
-                ],
-              ),
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment
+                  .start, // This makes the children left-aligned
+              children: [
+                Center(
+                  child: Column(
+                    children: [
+                      ClipOval(
+                        child: Image.asset(
+                          'lib/assets/org_profilepic.png',
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text("$orgName", style: const TextStyle(fontSize: 16)),
+                      const Divider(color: Colors.white, thickness: 1.0),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Text("Email: ${orgEmail ?? 'No Organization Email Found'}",
+                    style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 20),
+                Text(
+                    "Address: ${orgAddress ?? 'No Organization Address Found'}",
+                    style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 20),
+                Text(
+                    "Phone: ${orgPhone ?? 'No Organization Phone Number Found'}",
+                    style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 20),
+                Text(
+                  "Description: ",
+                )
+              ],
             ),
           );
         },

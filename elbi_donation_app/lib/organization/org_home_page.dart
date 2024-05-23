@@ -12,7 +12,7 @@ class OrgHomePage extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 53, 53, 53),
       appBar: AppBar(
         title: const Text(
-          "Organization",
+          "Organization Homepage",
           style: TextStyle(
               fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
@@ -26,19 +26,8 @@ class OrgHomePage extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Text("Organization Homepage",
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold)),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
               padding: EdgeInsets.only(top: 10.0),
-              child: Text("List of Organizations",
+              child: Text("List of Donations",
                   style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
@@ -47,15 +36,15 @@ class OrgHomePage extends StatelessWidget {
           ),
           SizedBox(height: 20.0),
           OrganizationListItem(
-            orgName: "Organization 1",
+            orgName: "Donation 1",
             orgId: "org1Id", // Replace with actual ID from Firestore
           ),
           OrganizationListItem(
-            orgName: "Organization 2",
+            orgName: "Donation 2",
             orgId: "org2Id", // Replace with actual ID from Firestore
           ),
           OrganizationListItem(
-            orgName: "Organization 3",
+            orgName: "Donation 3",
             orgId: "org3Id", // Replace with actual ID from Firestore
           ),
         ],
