@@ -40,7 +40,7 @@ class FirebaseAuthApi {
     }
   }
 
-    Future<void> signUpOrg(String email, String password, String name, String address, String contactno) async {
+    Future<void> signUpOrg(String email, String password, String name, String address, String contactno, String description, bool status) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -57,6 +57,8 @@ class FirebaseAuthApi {
         'email': email,
         'address': address,
         'contactno': contactno,
+        'description': description,
+        'status': status,
       });
     } on FirebaseException catch (e) {
       print("Firebase Exception: ${e.code} : ${e.message}");

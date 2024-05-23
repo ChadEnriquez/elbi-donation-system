@@ -18,6 +18,8 @@ class _SignUpState extends State<SignUpPage> {
   String? password;
   String? address;
   String? contactno;
+  String? description = "";
+  bool status = false;
   UserType? selectedUserType;
 
   @override
@@ -217,7 +219,7 @@ class _SignUpState extends State<SignUpPage> {
             await context
                 .read<UserAuthProvider>()
                 .authService
-                .signUp(email!, password!, name!, address!, contactno!);
+                .signUp(email!, password!, name!, address!, contactno!, );
 
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);
@@ -232,7 +234,7 @@ class _SignUpState extends State<SignUpPage> {
             await context
                 .read<UserAuthProvider>()
                 .authService
-                .signUpOrg(email!, password!, name!, address!, contactno!);
+                .signUpOrg(email!, password!, name!, address!, contactno!, description!, status);
 
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);
