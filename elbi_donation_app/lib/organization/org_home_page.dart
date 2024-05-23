@@ -1,13 +1,11 @@
+import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'org_profile.dart';
 
-class OrgHomePage extends StatefulWidget {
+class OrgHomePage extends StatelessWidget {
   const OrgHomePage({super.key});
 
-  @override
-  State<OrgHomePage> createState() => _OrgHomePageState();
-}
-
-class _OrgHomePageState extends State<OrgHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +20,10 @@ class _OrgHomePageState extends State<OrgHomePage> {
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Column(
+      drawer: const OrgDrawer(), // Added drawer
+      body: const Column(
         children: [
-          const Align(
+          Align(
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(top: 20.0),
@@ -35,57 +34,106 @@ class _OrgHomePageState extends State<OrgHomePage> {
                       fontWeight: FontWeight.bold)),
             ),
           ),
-          const Align(
+          Align(
             alignment: Alignment.topCenter,
             child: Padding(
               padding: EdgeInsets.only(top: 10.0),
-              child: Text("List of Donations",
+              child: Text("List of Organizations",
                   style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
                       fontWeight: FontWeight.normal)),
             ),
           ),
-          const SizedBox(height: 20.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: InkWell(
-              onTap: () {
-                // Handle your click event here
-              },
-              child: const Card(
-                child: ListTile(
-                  title: Text('- Organization 1 -', textAlign: TextAlign.center),
-                ),
+          SizedBox(height: 20.0),
+          OrganizationListItem(
+            orgName: "Organization 1",
+            orgId: "org1Id", // Replace with actual ID from Firestore
+          ),
+          OrganizationListItem(
+            orgName: "Organization 2",
+            orgId: "org2Id", // Replace with actual ID from Firestore
+          ),
+          OrganizationListItem(
+            orgName: "Organization 3",
+            orgId: "org3Id", // Replace with actual ID from Firestore
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class OrganizationListItem extends StatelessWidget {
+  final String orgName;
+  final String orgId;
+
+  const OrganizationListItem({
+    super.key,
+    required this.orgName,
+    required this.orgId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const OrgProfilePage()),
+          );
+        },
+        child: Card(
+          child: ListTile(
+            title: Text(orgName, textAlign: TextAlign.center),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OrgDrawer extends StatelessWidget {
+  const OrgDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          const DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text(
+              'Organization Menu',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: InkWell(
-              onTap: () {
-                // Handle your click event here
-              },
-              child: const Card(
-                child: ListTile(
-                  title: Text('- Organization 2 -', textAlign: TextAlign.center),
-                ),
-              ),
-            ),
+          ListTile(
+            title: const Text('Organization Profile'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              // Navigate to the organization profile page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const OrgProfilePage()),
+              );
+            },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: InkWell(
-              onTap: () {
-                // Handle your click event here
-              },
-              child: const Card(
-                child: ListTile(
-                  title: Text('- Organization 3 -', textAlign: TextAlign.center),
-                ),
-              ),
-            ),
-          ),
+          ListTile(
+          title: const Text('Logout'),
+          onTap: () {
+            context.read<UserAuthProvider>().signOut();
+            Navigator.pop(context);
+          },
+        ),
         ],
       ),
     );
