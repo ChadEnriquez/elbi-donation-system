@@ -21,7 +21,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ListTile(
             onTap: (){
               Navigator.pop(context);
-              Navigator.pushNamed(context, "/");
+              Navigator.pushNamed(context, "/donorhome");
             },
             title: const Text("Homepage", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
           ),

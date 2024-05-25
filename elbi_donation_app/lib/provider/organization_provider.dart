@@ -17,31 +17,4 @@ class OrganizationProvider extends ChangeNotifier {
     _organizations = firebaseService.getAllOrganizations();
     notifyListeners();
   }
-
-  // void addFriend(Person person) async {
-  //   String message = await firebaseService.addFriend(person.toJson(person));
-  //   print(message);
-  //   notifyListeners();
-  // }
-
-
-  // void deleteFriend(String? id) async{
-  //   await firebaseService.deleteFriend(id);
-  //   notifyListeners();
-  // }
-
-  // void editFriend(String? id, String type, String newdata) async {
-  //   await firebaseService.editFriend(id, type, newdata);
-  //   notifyListeners();
-  // }
-
-  // void toggleStatus(String? id, bool newdata) async {
-  //   await firebaseService.toggleStatus(id, newdata);
-  //   notifyListeners();
-  // }
-
-  // void editHappiness(String? id, double newdata) async {
-  //   await firebaseService.editHappiness(id, newdata);
-  //   notifyListeners();
-  // }
 }

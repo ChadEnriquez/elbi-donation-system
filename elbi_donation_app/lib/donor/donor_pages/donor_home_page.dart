@@ -1,7 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elbi_donation_app/donor/drawer.dart';
 import 'package:elbi_donation_app/model/organization.dart';
+import 'package:elbi_donation_app/provider/auth_provider.dart';
+import 'package:elbi_donation_app/provider/donor_provider.dart';
+import 'package:elbi_donation_app/provider/organization_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class DonorHomePage extends StatefulWidget {
@@ -12,8 +17,12 @@ class DonorHomePage extends StatefulWidget {
 }
 
 class _DonorHomePageState extends State<DonorHomePage> {
+  User? user;
+
   @override
   Widget build(BuildContext context) {
+    user = context.read<UserAuthProvider>().user;
+    context.read<DonorProvider>().getDonor(user!.email);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 53, 53, 53),
       drawer: const DrawerWidget(),
@@ -46,7 +55,7 @@ class _DonorHomePageState extends State<DonorHomePage> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
+                    itemCount: 1,
                     itemBuilder: ((context, index) {
                       final org = Organization.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
                       final orgID = snapshot.data?.docs[index].id;
