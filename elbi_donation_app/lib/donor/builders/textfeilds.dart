@@ -3,30 +3,31 @@ import 'package:flutter/material.dart';
 class NumberInputField extends StatefulWidget {
   final Function(String) callback;
   const NumberInputField(this.callback, {super.key});
+
   @override
-  State<NumberInputField> createState() => _NumberInputField();
+  State<NumberInputField> createState() => _NumberInputFieldState();
 }
 
-class _NumberInputField extends State<NumberInputField> {
+class _NumberInputFieldState extends State<NumberInputField> {
   String _weight = "";
-  @override
 
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      validator: (value){
-        if (_weight == "") return "Please enter the weigth.";
-        if (int.tryParse(_weight) == null) return "Please enter weight of donations.";
+      keyboardType: TextInputType.number,
+      validator: (value) {
+        if (_weight.isEmpty) return "Please enter the weight.";
+        if (int.tryParse(_weight) == null) return "Please enter a valid weight.";
         return null;
       },
       onChanged: (value) {
         setState(() {
           _weight = value;
           widget.callback(_weight);
-          });
+        });
       },
       decoration: const InputDecoration(
         border: OutlineInputBorder(),
-        // icon: Icon( Icons.account_circle_outlined,color: Colors.white),
         hintText: "Enter Weight of donation",
         labelText: "Weight of Donation: ",
         labelStyle: TextStyle(color: Colors.white),
@@ -36,6 +37,7 @@ class _NumberInputField extends State<NumberInputField> {
     );
   }
 }
+
 
 
 class AddressTextField extends StatefulWidget {

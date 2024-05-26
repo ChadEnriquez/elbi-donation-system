@@ -32,6 +32,7 @@ class FirebaseAuthApi {
         'email': email,
         'address': address,
         'contactno': contactno,
+        'donations': [],
       });
     } on FirebaseException catch (e) {
       print("Firebase Exception: ${e.code} : ${e.message}");
@@ -80,4 +81,6 @@ class FirebaseAuthApi {
     Future<void> signOut() async {
       await auth.signOut();
     }
+
+    
 }

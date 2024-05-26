@@ -11,6 +11,9 @@ class Donation {
   String phone;
   String status;
   String orgID;
+  String donationDriveID;
+  String donorID;
+  String qrImg;
 
   Donation({
     required this.category, 
@@ -22,7 +25,10 @@ class Donation {
     required this.address,
     required this.phone,
     required this.status,
-    required this.orgID
+    required this.orgID,
+    required this.donationDriveID,
+    required this.donorID,
+    required this.qrImg
   });
 
   factory Donation.fromJson(Map<String, dynamic> json) {
@@ -36,7 +42,10 @@ class Donation {
       address: List<String>.from(json['address']),
       phone: json['phone'],
       status: json['status'],
-      orgID: json['orgID']
+      orgID: json['orgID'],
+      donationDriveID: json['donationDriveID'],
+      donorID: json['donorID'],
+      qrImg: json['qrImg'] // Add this line
     );
   }
 
@@ -45,7 +54,7 @@ class Donation {
     return data.map<Donation>((dynamic d) => Donation.fromJson(d)).toList();
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(Donation donation) {
     return {
       'category': category,
       'method': method,
@@ -56,7 +65,10 @@ class Donation {
       'address': address,
       'phone': phone,
       'status': status,
-      'orgID':orgID
+      'orgID':orgID,
+      'donationDriveID':donationDriveID,
+      'donorID': donorID,
+      'qrImg': qrImg 
     };
   }
 }
