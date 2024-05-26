@@ -3,9 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FirebaseDonationAPI {
   static final FirebaseFirestore db = FirebaseFirestore.instance;
 
-  // Stream<QuerySnapshot> getAllDonations() {
-
-  // }
+  Stream<QuerySnapshot> getDonation() {
+    return db.collection("donations").snapshots();
+  }
 
   Future<String> addDonation(Map<String, dynamic> donation) async {
     try{
@@ -20,7 +20,18 @@ class FirebaseDonationAPI {
   Future<String> editQRimg(String id, String data) async {
     try {
         await db.collection("donations").doc(id).update({"qrImg": data});
-        return "Successfully edited!";
+        print("Successfully edited QR URL!");
+        return "Successfully edited QR URL!";
+    } on FirebaseException catch (e) {
+      return "Error in ${e.code}: ${e.message}";
+    }
+  }
+
+  Future<String> editDonationPhoto(String id, String data) async {
+    try {
+        await db.collection("donations").doc(id).update({"photo": data});
+        print("Successfully edited photo URL!");
+        return "Successfully edited photo URL!";
     } on FirebaseException catch (e) {
       return "Error in ${e.code}: ${e.message}";
     }

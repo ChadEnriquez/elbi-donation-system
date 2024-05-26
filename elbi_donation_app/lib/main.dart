@@ -51,13 +51,17 @@ class MyApp extends StatelessWidget {
         '/DonorProfile' : (context) => const DonorProfile(),
         '/orghome': (context) => const OrgHomePage(),
         '/adminhome': (context) => const AdminHomePage(),
-        // '/CameraPage' : (context) => const CameraPage(cameras: cameras, onImageCaptured: onImageCaptured)
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/DonationPage') {
           final args = settings.arguments as List;
           return MaterialPageRoute(
             builder: (context) => DonorDonationForm(orgData: args),
+          );
+        } else if (settings.name == '/DonorDonationsPage') {
+          final args = settings.arguments as List;
+          return MaterialPageRoute(
+            builder: (context) => DonorDonationPage(donation: args),
           );
         }
         return null;

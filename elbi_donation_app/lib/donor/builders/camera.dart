@@ -35,12 +35,7 @@ class _CameraPageState extends State<CameraPage> {
     try {
       await _cameraController.setFlashMode(FlashMode.off);
       XFile picture = await _cameraController.takePicture();
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => PreviewPage(
-                    picture: picture,
-                  )));
+      Navigator.push(context,MaterialPageRoute(builder: (context) => PreviewPage(picture: picture,)));
       widget.callback(picture);
     } on CameraException catch (e) {
       debugPrint('Error occured while taking picture: $e');
@@ -105,7 +100,17 @@ class _CameraPageState extends State<CameraPage> {
                         icon: const Icon(Icons.circle, color: Colors.white),
                       ),
                     ),
-                    const Spacer(),
+                    Expanded(
+                      child: IconButton(
+                        onPressed:() {
+                          Navigator.pop(context);
+                        },
+                        iconSize: 50,
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                        icon: const Icon(Icons.keyboard_return_rounded, color: Colors.white, size: 30,),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -118,7 +123,7 @@ class _CameraPageState extends State<CameraPage> {
 }
 
 class PreviewPage extends StatelessWidget {
-  const PreviewPage({Key? key, required this.picture}) : super(key: key);
+  const PreviewPage({super.key, required this.picture});
 
   final XFile picture;
 

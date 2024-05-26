@@ -15,4 +15,14 @@ class FirebaseDonorAPI {
       return Future.error(e.toString());
     }
   }
+
+  Future<String> addDonation(String userID, List<String> donations) async {
+    try {
+        await db.collection("donors").doc(userID).update({"donations": donations});
+        print("Successfully donor donation list!");
+        return "Successfully edited QR URL!";
+    } on FirebaseException catch (e) {
+      return "Error in ${e.code}: ${e.message}";
+    }
+  }
 }

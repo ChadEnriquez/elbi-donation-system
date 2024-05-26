@@ -1,4 +1,6 @@
+import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DrawerWidget extends StatefulWidget {
   const DrawerWidget({super.key, this.text});
@@ -32,6 +34,13 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             },
             title: const Text("Profile", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
           ),
+          ListTile(
+              title: Text('Logout'),
+              onTap: () {
+                context.read<UserAuthProvider>().signOut();
+                Navigator.pop(context);
+              }
+          )
         ],
       ),
     );

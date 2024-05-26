@@ -19,5 +19,10 @@ class DonorProvider with ChangeNotifier {
       QuerySnapshot donorSnapshot = await donorService.getDonorByEmail(email);
       _donor = [ donorSnapshot.docs.first.id ,Donor.fromJson(donorSnapshot.docs.first.data() as Map<String, dynamic>)];
       print(_donor);
-  } 
+  }
+
+  void addDonation(String donorID, List<String> donations) async {
+    await donorService.addDonation(donorID, donations);
+    notifyListeners();
+  }
 }
