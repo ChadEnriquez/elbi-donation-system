@@ -5,7 +5,8 @@ class DonationDriveDetailPage extends StatefulWidget {
   final String driveId;
   final String driveName;
 
-  const DonationDriveDetailPage({super.key, required this.driveId, required this.driveName});
+  const DonationDriveDetailPage(
+      {super.key, required this.driveId, required this.driveName});
 
   @override
   DonationDriveDetailPageState createState() => DonationDriveDetailPageState();
@@ -31,13 +32,18 @@ class DonationDriveDetailPageState extends State<DonationDriveDetailPage> {
             .collection('donation-drives')
             .doc(widget.driveId)
             .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Center(child: Text('Something went wrong'));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.data == null || !snapshot.data!.exists) {
+            return const Center(child: Text('Deleting data...'));
           }
 
           final data = snapshot.data!.data() as Map<String, dynamic>;
@@ -100,21 +106,53 @@ class DonationDriveDetailPageState extends State<DonationDriveDetailPage> {
                 });
               }
             },
-            child: const Icon(Icons.edit),
             heroTag: null,
+            child: const Icon(Icons.edit),
           ),
           const SizedBox(width: 16),
           FloatingActionButton(
             onPressed: () async {
-              await FirebaseFirestore.instance
-                  .collection('donation-drives')
-                  .doc(widget.driveId)
-                  .delete();
+              final confirmDelete = await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Confirm Delete'),
+                    content: const Text(
+                        'Are you sure you want to delete this donation drive?'),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pop(false); // User has cancelled the deletion
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Delete'),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .pop(true); // User has confirmed the deletion
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
 
-              Navigator.of(context).pop();
+              if (confirmDelete == true) {
+                await FirebaseFirestore.instance
+                    .collection('donation-drives')
+                    .doc(widget.driveId)
+                    .delete();
+
+                await Future.delayed(
+                    Duration(seconds: 1)); // Wait for 2 seconds
+
+                Navigator.of(context).pop();
+              }
             },
-            child: const Icon(Icons.delete),
             heroTag: null,
+            child: const Icon(Icons.delete),
           ),
         ],
       ),
