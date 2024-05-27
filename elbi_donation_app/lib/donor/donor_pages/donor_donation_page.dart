@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elbi_donation_app/donor/drawer.dart';
 import 'package:elbi_donation_app/model/donation.dart';
+import 'package:elbi_donation_app/model/organization.dart';
 import 'package:flutter/material.dart';
 
 class DonorDonationPage extends StatefulWidget {
@@ -12,6 +13,34 @@ class DonorDonationPage extends StatefulWidget {
 }
 
 class _DonorDonationPageState extends State<DonorDonationPage> {
+  late Future<Map<String, Map<String, dynamic>>> orgs;
+
+  @override
+  void initState() {
+    orgs = fetchOrganizations();
+    super.initState();
+  }
+
+  Future<Map<String, Map<String, dynamic>>> fetchOrganizations() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("organization").limit(1).get();
+    Map<String, Map<String, dynamic>> organizationsMap = {};
+    if (snapshot.docs.isNotEmpty) {
+      final doc = snapshot.docs.first;
+      final org = Organization.fromJson(doc.data() as Map<String, dynamic>);
+      organizationsMap[doc.id] = {"id": doc.id, "data": org};
+    }
+    return organizationsMap;
+  }
+
+  // Future<Map<String, Map<String, dynamic>>> fetchOrganizations() async {
+  //   QuerySnapshot snapshot = await FirebaseFirestore.instance.collection("organization").get();
+  //   Map<String, Map<String, dynamic>> organizationsMap = {};
+  //   for (var doc in snapshot.docs) {
+  //     final org = Organization.fromJson(doc.data() as Map<String, dynamic>);
+  //     organizationsMap[doc.id] = {"id": doc.id, "data": org};
+  //   }
+  //   return organizationsMap;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,53 +70,66 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
             );
           } else if (!snapshot.hasData) {
             return const Center(
-              child: Text("Do Donations Yet", style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic)),
+              child: Text("No Donations Yet", style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic)),
             );
           } else {
-              return Column(
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: donations.length,
-                      itemBuilder: ((context, index) {
-                        final donation = Donation.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
-                        final donationID = snapshot.data?.docs[index].id;
-                        if (donations.contains(donationID)) {
-                          return ListTile(
-                            title: Text(donationID!, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true),
-                            trailing: IconButton(
-                                onPressed: () {
-                                  // showDialog(
-                                  //   context: context, 
-                                  //   builder: (BuildContext context) => createAlertDialog(context, person, personID)
-                                  //   );
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: donations.length,
+                    itemBuilder: ((context, index) {
+                      final donation = Donation.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
+                      final donationID = snapshot.data?.docs[index].id;
+                      if (donations.contains(donationID)) {
+                        return FutureBuilder(
+                          future: orgs,
+                          builder: (context, orgsSnapshot) {
+                            if (orgsSnapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              Map<String, Map<String, dynamic>> organizationsMap = orgsSnapshot.data as Map<String, Map<String, dynamic>>;
+                              final orgId = organizationsMap[donation.orgID]?["id"] ?? "";
+                              final orgName = organizationsMap[donation.orgID]?["data"]?.name ?? "Unknown Organization";
+                              return ListTile(
+                                title: Text(orgName, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true),
+                                subtitle: Text("Donation Drive: ", style: const TextStyle(fontSize: 10, color: Colors.white), softWrap: true),
+                                trailing: IconButton(
+                                  onPressed: () {
+                                    // Delete donation logic here
+                                  },
+                                  icon: const Icon(Icons.delete_outlined, color: Colors.white),
+                                ),
+                                onTap: () {
+                                  // Navigate to donation details page
                                 },
-                                icon: const Icon(Icons.delete_outlined, color: Colors.white),
-                              ),
-                              onTap: () {
-                                // Navigator.pushNamed(context, "/Profile", arguments: personInfo); 
-                              },
-                              contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                              hoverColor: Colors.blueGrey[800],
-                          );
-                        }
-                        })
-                      ),
-                    ),
-                    Container(
-                        margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                        child: ElevatedButton(
-                        onPressed: () async {
-                            Navigator.pop(context);
-                        }, 
-                        child: const Text("Back", style: TextStyle(fontSize: 15, color: Colors.white)),
-                        ),
-                    ),
-                  ]
-                );
-            }
-          },
-        ), 
+                                contentPadding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                hoverColor: Colors.blueGrey[800],
+                              );
+                            }
+                          },
+                        );
+                      }
+                      return const SizedBox(); // Placeholder for other cases
+                    }),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Back", style: TextStyle(fontSize: 15, color: Colors.white)),
+                  ),
+                ),
+              ],
+            );
+          }
+        },
+      ),
     );
   }
 }

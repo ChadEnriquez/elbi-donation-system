@@ -11,10 +11,12 @@ import 'package:elbi_donation_app/donor/builders/radiobutton.dart';
 import 'package:elbi_donation_app/donor/builders/textfeilds.dart';
 import 'package:elbi_donation_app/donor/drawer.dart';
 import 'package:elbi_donation_app/model/donation.dart';
+import 'package:elbi_donation_app/model/donation_drive.dart';
 import 'package:elbi_donation_app/model/donor.dart';
 import 'package:elbi_donation_app/model/organization.dart';
 import 'package:elbi_donation_app/provider/donation_provider.dart';
 import 'package:elbi_donation_app/provider/donor_provider.dart';
+import 'package:elbi_donation_app/provider/organization_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -24,8 +26,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 
 class DonorDonationForm extends StatefulWidget {
-  final List orgData; 
-  const DonorDonationForm({super.key, required this.orgData});
+  final List data; 
+  const DonorDonationForm({super.key, required this.data});
 
   @override
   State<DonorDonationForm> createState() => _DonorDonationFormState();
@@ -55,14 +57,25 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
     String donorID = donorData[0];
     Donor donor = donorData[1]; 
 
-    String orgID = widget.orgData[0];
-    Organization org = widget.orgData[1];
+    String orgID = "";
+    String driveID = "";
+    var data = widget.data[1];
+
+    if (widget.data[1] is Organization){
+      orgID = widget.data[0];
+      data = widget.data[1];
+      driveID = "";
+    } else {
+      driveID = widget.data[0];
+      data = widget.data[1];
+      orgID = data.organizationID;
+    }
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 53, 53, 53),
       drawer: const DrawerWidget(),
       appBar: AppBar(
-        title: Text( org.name, style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),),
+        title: Text(data.name, style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),),
         backgroundColor: const Color.fromARGB(255, 48, 48, 48),
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
@@ -70,10 +83,10 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
           IconButton(
             icon:  const Icon(Icons.account_circle_rounded, color: Colors.white, size: 30,),
             onPressed: () {
-              showDialog(
-                context: context, 
-                builder: (BuildContext context) => createAlertDialogProfile(context, org)
-              );
+              // showDialog(
+              //   context: context, 
+              //   builder: (BuildContext context) => createAlertDialogProfile(context, org)
+              // );
             },
           ),
         ]
@@ -220,13 +233,14 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                             phone: information["phone"] ?? "", 
                             status: "Pending", 
                             orgID: orgID,
-                            donationDriveID: "",
+                            donationDriveID: driveID,
                             donorID: donorID,
                             qrImg: ""
                           );
                           String donationID =  await context.read<DonationsProvider>().addDonation(donation);
                           donor.donations.add(donationID);
-                          context.read<DonorProvider>().addDonation(donorID, donor.donations);
+                          context.read<DonorProvider>().addDonation(donorID,donor.donations);
+                          context.read<OrganizationProvider>().addDonation(orgID, donor.donations);
                           showDialog(
                             context: context, 
                             builder: (BuildContext context) => createAlertDialogForm(context, donationID, donorID)
@@ -289,7 +303,7 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
             const Text("Address:", style: TextStyle(fontSize: 15, color: Colors.white)),
             for (var i = 0; i < org.address.length; i++)
               Text("    ${i+1}: ${org.address[i]}", style: const TextStyle(fontSize: 15, color: Colors.white)),
-            Text("Phone Number: ${org.phone}", style: const TextStyle(fontSize: 15, color: Colors.white)),
+            Text("Phone Number: ${org.contactno}", style: const TextStyle(fontSize: 15, color: Colors.white)),
           ],
         ),
       ),
