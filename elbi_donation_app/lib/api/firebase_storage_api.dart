@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:firebase_storage/firebase_storage.dart';

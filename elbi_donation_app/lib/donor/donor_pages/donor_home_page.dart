@@ -3,7 +3,6 @@ import 'package:elbi_donation_app/donor/drawer.dart';
 import 'package:elbi_donation_app/model/organization.dart';
 import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:elbi_donation_app/provider/donor_provider.dart';
-import 'package:elbi_donation_app/provider/organization_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -72,7 +71,7 @@ class _DonorHomePageState extends State<DonorHomePage> {
                           },
                         ),
                         onTap: () {
-                          Navigator.pushNamed(context, "/DonationPage", arguments: orgData);
+                          Navigator.pushNamed(context, "/DonationDrivesPage", arguments: orgData);
                         },
                       );
                     }
@@ -102,7 +101,7 @@ class _DonorHomePageState extends State<DonorHomePage> {
             const Text("Address:", style: TextStyle(fontSize: 15, color: Colors.white)),
             for (var i = 0; i < org.address.length; i++)
               Text("    ${i+1}: ${org.address[i]}", style: const TextStyle(fontSize: 15, color: Colors.white)),
-            Text("Phone Number: ${org.phone}", style: const TextStyle(fontSize: 15, color: Colors.white)),
+            Text("Phone Number: ${org.contactno}", style: const TextStyle(fontSize: 15, color: Colors.white)),
           ],
         ),
       ),

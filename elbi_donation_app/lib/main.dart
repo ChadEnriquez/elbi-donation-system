@@ -1,7 +1,7 @@
 
 import 'package:elbi_donation_app/admin/admin_home_page.dart';
 import 'package:elbi_donation_app/authentication/signin_page.dart';
-import 'package:elbi_donation_app/donor/builders/camera.dart';
+import 'package:elbi_donation_app/donor/donor_pages/donor_donation_drives.dart';
 import 'package:elbi_donation_app/donor/donor_pages/donor_donation_form.dart';
 import 'package:elbi_donation_app/donor/donor_pages/donor_donation_page.dart';
 import 'package:elbi_donation_app/donor/donor_pages/donor_home_page.dart';
@@ -53,15 +53,20 @@ class MyApp extends StatelessWidget {
         '/adminhome': (context) => const AdminHomePage(),
       },
       onGenerateRoute: (settings) {
-        if (settings.name == '/DonationPage') {
+        if (settings.name == '/DonorDonationForm') {
           final args = settings.arguments as List;
           return MaterialPageRoute(
-            builder: (context) => DonorDonationForm(orgData: args),
+            builder: (context) => DonorDonationForm(data: args),
           );
         } else if (settings.name == '/DonorDonationsPage') {
           final args = settings.arguments as List;
           return MaterialPageRoute(
             builder: (context) => DonorDonationPage(donation: args),
+          );
+        } else if (settings.name == '/DonationDrivesPage') {
+          final args = settings.arguments as List;
+          return MaterialPageRoute(
+            builder: (context) => DonationDrivesPage(orgData: args),
           );
         }
         return null;

@@ -17,4 +17,9 @@ class OrganizationProvider extends ChangeNotifier {
     _organizations = firebaseService.getAllOrganizations();
     notifyListeners();
   }
+
+  void addDonation(String orgID, List<String> donations) async {
+    await firebaseService.addDonation(orgID, donations);
+    notifyListeners();
+  }
 }
