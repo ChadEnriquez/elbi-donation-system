@@ -41,49 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDrrCvHs9qUzP0LhUJGKVl_IzME-BUmP9A',
-    appId: '1:134360840631:web:eedd57d230cba40f5e5032',
-    messagingSenderId: '134360840631',
-    projectId: 'cmsc23-project-44487',
-    authDomain: 'cmsc23-project-44487.firebaseapp.com',
-    storageBucket: 'cmsc23-project-44487.appspot.com',
-    measurementId: 'G-37J07DS900',
+    apiKey: 'AIzaSyDIVg5R3viD_N-6CSsMezlO41j9oq-IClM',
+    appId: '1:918785874754:web:a62199c970c4ec1f5786db',
+    messagingSenderId: '918785874754',
+    projectId: 'cmsc23-project-6feab',
+    authDomain: 'cmsc23-project-6feab.firebaseapp.com',
+    storageBucket: 'cmsc23-project-6feab.appspot.com',
+    measurementId: 'G-D070N6EE1N',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDDwMfr6_9lJ1KbqApUeYQFJM-9hq_k_gc',
-    appId: '1:134360840631:android:75e97094b6f2bc535e5032',
-    messagingSenderId: '134360840631',
-    projectId: 'cmsc23-project-44487',
-    storageBucket: 'cmsc23-project-44487.appspot.com',
+    apiKey: 'AIzaSyBvXQtkdviDfwxZ-c7IW92nfWrayVhbhxY',
+    appId: '1:918785874754:android:8ab807f93e901f6c5786db',
+    messagingSenderId: '918785874754',
+    projectId: 'cmsc23-project-6feab',
+    storageBucket: 'cmsc23-project-6feab.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAMVz0MP0YNw9IfQXlLnXBrc3rhBdDWbmg',
-    appId: '1:134360840631:ios:cf4553de1e956f7f5e5032',
-    messagingSenderId: '134360840631',
-    projectId: 'cmsc23-project-44487',
-    storageBucket: 'cmsc23-project-44487.appspot.com',
+    apiKey: 'AIzaSyC7mV3J8pqTDuq9jxOf_1tHhy1zq3cbdK8',
+    appId: '1:918785874754:ios:1bc84f464209bb785786db',
+    messagingSenderId: '918785874754',
+    projectId: 'cmsc23-project-6feab',
+    storageBucket: 'cmsc23-project-6feab.appspot.com',
     iosBundleId: 'com.example.elbiDonationApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAMVz0MP0YNw9IfQXlLnXBrc3rhBdDWbmg',
-    appId: '1:134360840631:ios:cf4553de1e956f7f5e5032',
-    messagingSenderId: '134360840631',
-    projectId: 'cmsc23-project-44487',
-    storageBucket: 'cmsc23-project-44487.appspot.com',
+    apiKey: 'AIzaSyC7mV3J8pqTDuq9jxOf_1tHhy1zq3cbdK8',
+    appId: '1:918785874754:ios:1bc84f464209bb785786db',
+    messagingSenderId: '918785874754',
+    projectId: 'cmsc23-project-6feab',
+    storageBucket: 'cmsc23-project-6feab.appspot.com',
     iosBundleId: 'com.example.elbiDonationApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDrrCvHs9qUzP0LhUJGKVl_IzME-BUmP9A',
-    appId: '1:134360840631:web:c4c9d7b96c1e38745e5032',
-    messagingSenderId: '134360840631',
-    projectId: 'cmsc23-project-44487',
-    authDomain: 'cmsc23-project-44487.firebaseapp.com',
-    storageBucket: 'cmsc23-project-44487.appspot.com',
-    measurementId: 'G-EDTEHH69NH',
+    apiKey: 'AIzaSyDIVg5R3viD_N-6CSsMezlO41j9oq-IClM',
+    appId: '1:918785874754:web:3f06c73e1bfdf4645786db',
+    messagingSenderId: '918785874754',
+    projectId: 'cmsc23-project-6feab',
+    authDomain: 'cmsc23-project-6feab.firebaseapp.com',
+    storageBucket: 'cmsc23-project-6feab.appspot.com',
+    measurementId: 'G-R5P8KYQQR3',
   );
 
 }

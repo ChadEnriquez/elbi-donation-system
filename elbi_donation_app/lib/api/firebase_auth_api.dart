@@ -15,7 +15,7 @@ class FirebaseAuthApi {
     return auth.currentUser;
   }
 
-  Future<void> signUp(String email, String password, String name, String address, String contactno) async {
+  Future<void> signUp(String email, String password, String name, List<String> address, String contactno) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -32,6 +32,7 @@ class FirebaseAuthApi {
         'email': email,
         'address': address,
         'contactno': contactno,
+        'donations': [],
       });
     } on FirebaseException catch (e) {
       print("Firebase Exception: ${e.code} : ${e.message}");
@@ -40,7 +41,7 @@ class FirebaseAuthApi {
     }
   }
 
-    Future<void> signUpOrg(String email, String password, String name, String address, String contactno) async {
+    Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -57,6 +58,12 @@ class FirebaseAuthApi {
         'email': email,
         'address': address,
         'contactno': contactno,
+        'description': "",
+        'status': true,
+        'approval' : false,
+        'proof' : "",
+        'donations' : [],
+        'donationDrives' : [],
       });
     } on FirebaseException catch (e) {
       print("Firebase Exception: ${e.code} : ${e.message}");
@@ -78,4 +85,6 @@ class FirebaseAuthApi {
     Future<void> signOut() async {
       await auth.signOut();
     }
+
+    
 }

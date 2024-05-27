@@ -1,0 +1,48 @@
+import 'package:elbi_donation_app/provider/auth_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class DrawerWidget extends StatefulWidget {
+  const DrawerWidget({super.key, this.text});
+  final String? text;
+
+  @override
+  State<DrawerWidget> createState() => _DrawerWidgetState();
+}
+
+class _DrawerWidgetState extends State<DrawerWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+      elevation: 1.5,
+      shadowColor: Colors.grey[300],
+      child: ListView(
+        children: [
+          const DrawerHeader(child: Text("Main Menu", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold))),
+          ListTile(
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, "/donorhome");
+            },
+            title: const Text("Homepage", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+          ListTile(
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, "/DonorProfile");
+            },
+            title: const Text("Profile", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold)),
+          ),
+          ListTile(
+              title: Text('Logout'),
+              onTap: () {
+                context.read<UserAuthProvider>().signOut();
+                Navigator.pop(context);
+              }
+          )
+        ],
+      ),
+    );
+  }
+}
