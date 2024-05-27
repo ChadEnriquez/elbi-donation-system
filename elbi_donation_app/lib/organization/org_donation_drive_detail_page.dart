@@ -146,7 +146,7 @@ class DonationDriveDetailPageState extends State<DonationDriveDetailPage> {
                     .delete();
 
                 await Future.delayed(
-                    Duration(seconds: 1)); // Wait for 2 seconds
+                    const Duration(seconds: 1)); 
 
                 Navigator.of(context).pop();
               }

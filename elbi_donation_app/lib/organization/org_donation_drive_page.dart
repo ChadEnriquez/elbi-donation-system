@@ -53,7 +53,7 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
                   document.data() as Map<String, dynamic>;
               return Card(
                 child: ListTile(
-                  title: Center(child: Text(data['name'])), // Centered text
+                  title: Center(child: Text(data['name'])), 
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -63,7 +63,7 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
                         ),
                       ),
                     );
-                  }, // onPressed that does nothing
+                  }, 
                 ),
               );
             }).toList(),
@@ -108,7 +108,7 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
             await FirebaseFirestore.instance.collection('donation-drives').add({
               'name': driveName,
               'organizationID': organization?.uid,
-              'donationID': [], // Empty array for donationID
+              'donationID': [], 
             });
 
             setState(() {

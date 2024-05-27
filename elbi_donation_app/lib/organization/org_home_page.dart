@@ -21,7 +21,7 @@ class OrgHomePage extends StatelessWidget {
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      drawer: const OrgDrawer(), // Added drawer
+      drawer: const OrgDrawer(), 
       body: const Column(
         children: [
           Align(
