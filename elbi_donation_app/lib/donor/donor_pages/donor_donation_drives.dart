@@ -4,7 +4,6 @@ import 'package:elbi_donation_app/model/donation_drive.dart';
 import 'package:elbi_donation_app/model/organization.dart';
 import 'package:flutter/material.dart';
 
-
 class DonationDrivesPage extends StatefulWidget {
   final List orgData; 
   const DonationDrivesPage({super.key, required this.orgData});

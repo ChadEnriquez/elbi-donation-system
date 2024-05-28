@@ -1,3 +1,4 @@
+
 import 'package:elbi_donation_app/authentication/builders/address_Field.dart';
 //import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:elbi_donation_app/provider/auth_provider.dart';
@@ -20,6 +21,8 @@ class _SignUpState extends State<SignUpPage> {
   String? password;
   List<String>? address;
   String? contactno;
+  String? description = "";
+  bool status = false;
   UserType? selectedUserType;
 
   @override
@@ -212,7 +215,6 @@ class _SignUpState extends State<SignUpPage> {
                 .read<UserAuthProvider>()
                 .authService
                 .signUp(email!, password!, name!, address!, contactno!, context);
-
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);
           }
@@ -227,7 +229,6 @@ class _SignUpState extends State<SignUpPage> {
                 .read<UserAuthProvider>()
                 .authService
                 .signUpOrg(email!, password!, name!, address!, contactno!, context);
-
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);
           }
