@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elbi_donation_app/admin/admin_home_page.dart';
 import 'package:elbi_donation_app/donor/donor_pages/donor_home_page.dart';
 import 'package:elbi_donation_app/organization/org_home_page.dart';
@@ -23,31 +24,49 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: context.watch<UserAuthProvider>().userStream,
-        builder: (context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text("Error encountered! ${snapshot.error}"),
-              ),
-            );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          } else if (!snapshot.hasData) {
-            return _buildSignInForm();
-          } else {
-            // User is already signed in, navigate to the appropriate home page
-            final userRole = _getUserRole(snapshot.data!.email);
-            return _navigateToHomePage(userRole);
-          }
-        },
-      ),
-    );
+    body: StreamBuilder(
+      stream: context.watch<UserAuthProvider>().userStream,
+      builder: (context, AsyncSnapshot<User?> snapshot) {
+        if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Text("Error encountered! ${snapshot.error}"),
+            ),
+          );
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (!snapshot.hasData) {
+          return _buildSignInForm();
+        } else {
+          // User is already signed in, navigate to the appropriate home page
+          return FutureBuilder<UserRole>(
+            future: _getUserRole(snapshot.data!.email),
+            builder: (context, roleSnapshot) {
+              if (roleSnapshot.connectionState == ConnectionState.waiting) {
+                return Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              } else if (roleSnapshot.hasError) {
+                return Scaffold(
+                  body: Center(
+                    child: Text("Error determining role: ${roleSnapshot.error}"),
+                  ),
+                );
+              } else {
+                return _navigateToHomePage(roleSnapshot.data!);
+              }
+            },
+          );
+        }
+      },
+    ),
+  );
   }
 
   Widget _buildSignInForm() {
@@ -165,13 +184,13 @@ class _SignInPageState extends State<SignInPage> {
       print(message);
       print(_showSignInErrorMessage);
 
-      setState(() {
+      setState(() async {
         if (message != null && message.isNotEmpty) {
           _showSignInErrorMessage = true;
         } else {
           _showSignInErrorMessage = false;
           // Determine the user role and act accordingly
-          UserRole userRole = _getUserRole(_email!);
+          UserRole userRole = await _getUserRole(_email!);
           switch (userRole) {
             case UserRole.donor:
               Navigator.pushReplacementNamed(context, '/donorhome');
@@ -199,14 +218,24 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
-  UserRole _getUserRole(String? email) {
-    if (email != null && email.contains("@admin.com")) {
+  Future<UserRole> _getUserRole(String? email) async {
+    if (email == "admin@gmail.com") {
       return UserRole.admin;
-    } else if (email != null && email.contains("@organization.com")) {
+    } else if (email != null && await _isEmailInOrganization(email)) {
       return UserRole.organization;
     } else {
       return UserRole.donor; // Default to donor
     }
+  }
+
+  Future<bool> _isEmailInOrganization(String email) async {
+    final firestore = FirebaseFirestore.instance;
+    final querySnapshot = await firestore
+        .collection('organization')
+        .where('email', isEqualTo: email)
+        .get();
+
+    return querySnapshot.docs.isNotEmpty;
   }
 }
 

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class FirebaseAuthApi {
   late FirebaseAuth auth;
@@ -15,7 +16,7 @@ class FirebaseAuthApi {
     return auth.currentUser;
   }
 
-  Future<void> signUp(String email, String password, String name, String address, String contactno) async {
+Future<void> signUp(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -34,14 +35,44 @@ class FirebaseAuthApi {
         'contactno': contactno,
         'donations': [],
       });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        // Handle email already in use error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('The account already exists for that email.'),
+          ),
+        );
+      } else if (e.code == 'weak-password') {
+        // Handle weak password error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('The password provided is too weak.'),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Firebase Auth Exception: ${e.code} : ${e.message}'),
+          ),
+        );
+      }
     } on FirebaseException catch (e) {
-      print("Firebase Exception: ${e.code} : ${e.message}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Firebase Exception: ${e.code} : ${e.message}'),
+        ),
+      );
     } catch (e) {
-      print("Error 001: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+        ),
+      );
     }
   }
 
-    Future<void> signUpOrg(String email, String password, String name, String address, String contactno, String description, bool status) async {
+  Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -57,14 +88,48 @@ class FirebaseAuthApi {
         'name': name,
         'email': email,
         'address': address,
-        'contactno': contactno,
-        'description': description,
-        'status': status,
+        'phone': contactno,
+        'description': "",
+        'status': true,
+        'approval' : false,
+        'proof' : "",
+        'donations' : [],
+        'donationDrives' : [],
       });
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        // Handle email already in use error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('The account already exists for that email.'),
+          ),
+        );
+      } else if (e.code == 'weak-password') {
+        // Handle weak password error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('The password provided is too weak.'),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${e.message}'),
+          ),
+        );
+      }
     } on FirebaseException catch (e) {
-      print("Firebase Exception: ${e.code} : ${e.message}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Firebase Exception: ${e.code} : ${e.message}'),
+        ),
+      );
     } catch (e) {
-      print("Error 001: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+        ),
+      );
     }
   }
 

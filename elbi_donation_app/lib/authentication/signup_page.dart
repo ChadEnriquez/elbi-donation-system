@@ -1,3 +1,6 @@
+
+import 'package:elbi_donation_app/authentication/builders/address_Field.dart';
+//import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +19,7 @@ class _SignUpState extends State<SignUpPage> {
   String? name;
   String? email;
   String? password;
-  String? address;
+  List<String>? address;
   String? contactno;
   String? description = "";
   bool status = false;
@@ -83,7 +86,11 @@ class _SignUpState extends State<SignUpPage> {
           SizedBox(height: 20),
           passwordField,
           SizedBox(height: 20),
-          addressField,
+          AddressTextField(callback: (value) {
+            setState(() {
+              address = value;
+            });
+          }),
           SizedBox(height: 20),
           contactField,
           SizedBox(height: 20),
@@ -98,10 +105,13 @@ class _SignUpState extends State<SignUpPage> {
           SizedBox(height: 20),
           passwordField,
           SizedBox(height: 20),
-          addressField,
+          AddressTextField(callback: (value) {
+            setState(() {
+              address = value;
+            });
+          }),
           SizedBox(height: 20),
           contactField,
-          //, proof(photo daw huhuhu pano gawin itue)
           SizedBox(height: 20),
           submitButtonOrg
         ];
@@ -182,21 +192,6 @@ class _SignUpState extends State<SignUpPage> {
         ),
       );
 
-  Widget get addressField => Padding(
-        padding: const EdgeInsets.only(bottom: 5),
-        child: TextFormField(
-          decoration: const InputDecoration(
-              border: OutlineInputBorder(), label: Text("Address")),
-          onSaved: (value) => setState(() => address = value),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return "Please enter a valid address";
-            }
-            return null;
-          },
-        ),
-      );
-
   Widget get contactField => Padding(
         padding: const EdgeInsets.only(bottom: 5),
         child: TextFormField(
@@ -219,8 +214,7 @@ class _SignUpState extends State<SignUpPage> {
             await context
                 .read<UserAuthProvider>()
                 .authService
-                .signUp(email!, password!, name!, address!, contactno!, );
-
+                .signUp(email!, password!, name!, address!, contactno!, context);
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);
           }
@@ -234,8 +228,7 @@ class _SignUpState extends State<SignUpPage> {
             await context
                 .read<UserAuthProvider>()
                 .authService
-                .signUpOrg(email!, password!, name!, address!, contactno!, description!, status);
-
+                .signUpOrg(email!, password!, name!, address!, contactno!, context);
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);
           }
