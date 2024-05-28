@@ -38,7 +38,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               title: Text('Logout'),
               onTap: () {
                 context.read<UserAuthProvider>().signOut();
-                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/');
               }
           )
         ],

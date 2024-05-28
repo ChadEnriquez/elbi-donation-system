@@ -1,9 +1,8 @@
 import 'package:elbi_donation_app/authentication/builders/address_Field.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+//import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
 
 enum UserType { Donor, Organization}
 
@@ -21,7 +20,6 @@ class _SignUpState extends State<SignUpPage> {
   String? password;
   List<String>? address;
   String? contactno;
-  List<File> _selectedImages = [];
   UserType? selectedUserType;
 
   @override
@@ -111,7 +109,6 @@ class _SignUpState extends State<SignUpPage> {
           }),
           SizedBox(height: 20),
           contactField,
-          photoField,
           SizedBox(height: 20),
           submitButtonOrg
         ];
@@ -207,26 +204,6 @@ class _SignUpState extends State<SignUpPage> {
         ),
       );
 
-  Widget get photoField => Padding(
-    padding: const EdgeInsets.only(bottom: 5),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Proof/s of legitimacy',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 8),
-        // ElevatedButton.icon(
-        //   onPressed: _pickImages,
-        //   icon: Icon(Icons.camera_alt),
-        //   label: Text('Select Photos'),
-        // ),
-      ],
-    ),
-  );
-
-
   Widget get submitButton => ElevatedButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -234,7 +211,7 @@ class _SignUpState extends State<SignUpPage> {
             await context
                 .read<UserAuthProvider>()
                 .authService
-                .signUp(email!, password!, name!, address!, contactno!, );
+                .signUp(email!, password!, name!, address!, contactno!, context);
 
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);
@@ -249,7 +226,7 @@ class _SignUpState extends State<SignUpPage> {
             await context
                 .read<UserAuthProvider>()
                 .authService
-                .signUpOrg(email!, password!, name!, address!, contactno!);
+                .signUpOrg(email!, password!, name!, address!, contactno!, context);
 
             // check if the widget hasn't been disposed of after an asynchronous action
             if (mounted) Navigator.pop(context);
