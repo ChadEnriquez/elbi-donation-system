@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:elbi_donation_app/model/donor.dart';
-import 'donor_detail.dart'; // Ensure you have the correct path to your DonorDetailPage file
+import 'details/donor_detail.dart'; // Ensure you have the correct path to your DonorDetailPage file
 
 class ViewDonorsPage extends StatelessWidget {
   const ViewDonorsPage({Key? key}) : super(key: key);
@@ -15,7 +15,7 @@ class ViewDonorsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('View Donors'),
+        title: Text('Donors List'),
       ),
       body: FutureBuilder<List<Donor>>(
         future: _fetchDonors(),
