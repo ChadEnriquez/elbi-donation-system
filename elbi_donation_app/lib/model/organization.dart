@@ -4,6 +4,7 @@ class Organization {
   String name;
   String email;
   String password;
+  String description; 
   List<String> address;
   List<String> donations;   // ID lang ng donations ang laman nito
   List<String> donationDrives;
@@ -14,6 +15,7 @@ class Organization {
     required this.name, 
     required this.email, 
     required this.password,
+    required this.description, 
     required this.address,
     required this.donations,
     required this.donationDrives,
@@ -25,7 +27,8 @@ class Organization {
     return Organization(
       name: json['name'], 
       email: json['email'],
-      password: "",  // Assuming password is not fetched from Firestore for security
+      password: "",  
+      description: json['description'], 
       address: List<String>.from(json['address']),
       donations: List<String>.from(json['donations']),
       donationDrives: List<String>.from(json['donationDrives']),
@@ -44,6 +47,7 @@ class Organization {
       'name': name,
       'email': email,
       'password': password,
+      'description': description, 
       'address': address,
       'donations': donations,
       'donation_drives': donationDrives,

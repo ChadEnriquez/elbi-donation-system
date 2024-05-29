@@ -79,17 +79,6 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
         backgroundColor: const Color.fromARGB(255, 48, 48, 48),
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
-        actions: [
-          IconButton(
-            icon:  const Icon(Icons.account_circle_rounded, color: Colors.white, size: 30,),
-            onPressed: () {
-              // showDialog(
-              //   context: context, 
-              //   builder: (BuildContext context) => createAlertDialogProfile(context, org)
-              // );
-            },
-          ),
-        ]
       ),
       body: SingleChildScrollView(
         child: Form(
