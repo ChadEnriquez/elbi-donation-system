@@ -53,7 +53,12 @@ class MyApp extends StatelessWidget {
         '/adminhome': (context) => const AdminHomePage(),
       },
       onGenerateRoute: (settings) {
-        if (settings.name == '/DonorDonationForm') {
+        if (settings.name == '/DonationDrivesPage') {
+          final args = settings.arguments as List;
+          return MaterialPageRoute(
+            builder: (context) => DonationDrivesPage(orgData: args),
+          );
+        } else if (settings.name == '/DonorDonationForm') {
           final args = settings.arguments as List;
           return MaterialPageRoute(
             builder: (context) => DonorDonationForm(data: args),
@@ -63,12 +68,7 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) => DonorDonationPage(donation: args),
           );
-        } else if (settings.name == '/DonationDrivesPage') {
-          final args = settings.arguments as List;
-          return MaterialPageRoute(
-            builder: (context) => DonationDrivesPage(orgData: args),
-          );
-        }
+        } 
         return null;
       },
       theme: ThemeData.dark()
