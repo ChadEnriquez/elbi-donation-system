@@ -5,6 +5,7 @@ import 'package:elbi_donation_app/organization/org_home_page.dart';
 import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'signup_page.dart';
 
@@ -24,49 +25,49 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    body: StreamBuilder(
-      stream: context.watch<UserAuthProvider>().userStream,
-      builder: (context, AsyncSnapshot<User?> snapshot) {
-        if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(
-              child: Text("Error encountered! ${snapshot.error}"),
-            ),
-          );
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else if (!snapshot.hasData) {
-          return _buildSignInForm();
-        } else {
-          // User is already signed in, navigate to the appropriate home page
-          return FutureBuilder<UserRole>(
-            future: _getUserRole(snapshot.data!.email),
-            builder: (context, roleSnapshot) {
-              if (roleSnapshot.connectionState == ConnectionState.waiting) {
-                return Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              } else if (roleSnapshot.hasError) {
-                return Scaffold(
-                  body: Center(
-                    child: Text("Error determining role: ${roleSnapshot.error}"),
-                  ),
-                );
-              } else {
-                return _navigateToHomePage(roleSnapshot.data!);
-              }
-            },
-          );
-        }
-      },
-    ),
-  );
+      body: StreamBuilder(
+        stream: context.watch<UserAuthProvider>().userStream,
+        builder: (context, AsyncSnapshot<User?> snapshot) {
+          if (snapshot.hasError) {
+            return Scaffold(
+              body: Center(
+                child: Text("Error encountered! ${snapshot.error}"),
+              ),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else if (!snapshot.hasData) {
+            return _buildSignInForm();
+          } else {
+            // User is already signed in, navigate to the appropriate home page
+            return FutureBuilder<UserRole>(
+              future: _getUserRole(snapshot.data!.email),
+              builder: (context, roleSnapshot) {
+                if (roleSnapshot.connectionState == ConnectionState.waiting) {
+                  return Scaffold(
+                    body: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else if (roleSnapshot.hasError) {
+                  return Scaffold(
+                    body: Center(
+                      child: Text("Error determining role: ${roleSnapshot.error}"),
+                    ),
+                  );
+                } else {
+                  return _navigateToHomePage(roleSnapshot.data!, snapshot.data!.email!);
+                }
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 
   Widget _buildSignInForm() {
@@ -125,10 +126,10 @@ class _SignInPageState extends State<SignInPage> {
                 child: ElevatedButton(
                   onPressed: _submitForm,
                   style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5), // Adjust the radius as needed
-                        ),
-                      ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5), // Adjust the radius as needed
+                    ),
+                  ),
                   child: const Text("Sign In", style: TextStyle(color: Colors.white)),
                 ),
               ),
@@ -164,7 +165,6 @@ class _SignInPageState extends State<SignInPage> {
                   ],
                 ),
               ),
-              
             ],
           ),
         ),
@@ -179,42 +179,87 @@ class _SignInPageState extends State<SignInPage> {
       String? message = await context
           .read<UserAuthProvider>()
           .authService
-          .signIn(_email!, _password!);
+          .signIn(context, _email!, _password!);
 
-      print(message);
-      print(_showSignInErrorMessage);
-
-      setState(() async {
-        if (message != null && message.isNotEmpty) {
-          _showSignInErrorMessage = true;
+      if (message == "Success") {
+        // Determine the user role and act accordingly
+        UserRole userRole = await _getUserRole(_email!);
+        if (userRole == UserRole.organization) {
+          bool approved = await _isOrganizationApproved(_email!);
+          if (approved) {
+            Navigator.pushReplacementNamed(context, '/orghome');
+          } else {
+            // Show Snackbar and reset form
+            _showOrganizationNotApprovedSnackbar();
+            setState(() {
+              _formKey.currentState!.reset();
+            });
+          }
         } else {
-          _showSignInErrorMessage = false;
-          // Determine the user role and act accordingly
-          UserRole userRole = await _getUserRole(_email!);
+          // Navigate to other home pages
           switch (userRole) {
             case UserRole.donor:
               Navigator.pushReplacementNamed(context, '/donorhome');
               break;
-            case UserRole.organization:
-              Navigator.pushReplacementNamed(context, '/orghome');
-              break;
             case UserRole.admin:
               Navigator.pushReplacementNamed(context, '/adminhome');
               break;
+            default:
+              Navigator.pushReplacementNamed(context, '/');
+              break;
           }
         }
-      });
+      } else {
+        // Error occurred during sign-in, Snackbar already displayed by signIn method
+        setState(() {
+          _showSignInErrorMessage = true;
+        });
+      }
     }
   }
 
-  Widget _navigateToHomePage(UserRole userRole) {
+
+
+  Widget _navigateToHomePage(UserRole userRole, String email) {
     switch (userRole) {
       case UserRole.donor:
         return DonorHomePage();
       case UserRole.organization:
-        return OrgHomePage();
+        return FutureBuilder<bool>(
+          future: _isOrganizationApproved(email),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Scaffold(
+                body: Center(
+                  child: Text("Error determining organization approval status: ${snapshot.error}"),
+                ),
+              );
+            } else {
+              bool approved = snapshot.data ?? false;
+              if (approved) {
+                return OrgHomePage();
+              } else {
+                // Organization not approved, show Snackbar and return to sign-in page
+                _showOrganizationNotApprovedSnackbar();
+                return _buildSignInForm();
+              }
+            }
+          },
+        );
       case UserRole.admin:
         return AdminHomePage();
+      default:
+        return Scaffold(
+          body: Center(
+            child: Text("Unknown role"),
+          ),
+        );
     }
   }
 
@@ -236,6 +281,31 @@ class _SignInPageState extends State<SignInPage> {
         .get();
 
     return querySnapshot.docs.isNotEmpty;
+  }
+
+  Future<bool> _isOrganizationApproved(String email) async {
+    final firestore = FirebaseFirestore.instance;
+    final querySnapshot = await firestore
+        .collection('organization')
+        .where('email', isEqualTo: email)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final orgData = querySnapshot.docs.first.data();
+      return orgData['approval'] ?? false;
+    } else {
+      return false;
+    }
+  }
+
+  void _showOrganizationNotApprovedSnackbar() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Organization sign up is not yet approved."),
+        ),
+      );
+    });
   }
 }
 

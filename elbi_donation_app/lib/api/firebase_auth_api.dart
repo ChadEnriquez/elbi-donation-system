@@ -133,16 +133,46 @@ Future<void> signUp(String email, String password, String name, List<String> add
     }
   }
 
-  Future<String?> signIn(String email, String password) async {
+  Future<String?> signIn(BuildContext context, String email, String password) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       return "Success";
-    } on FirebaseException catch(e) {
-      return "Error: ${e.code} : ${e.message}";
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-credential' || e.code == 'wrong-password') {
+        // Show snackbar for incorrect email/password
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Invalid email or password.'),
+          ),
+        );
+      } else {
+        // Show snackbar for other FirebaseAuthExceptions
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('${e.message}'),
+          ),
+        );
+      }
+      return null;
+    } on FirebaseException catch (e) {
+      // Show snackbar for FirebaseException
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Firebase Exception: ${e.code} : ${e.message}'),
+        ),
+      );
+      return null;
     } catch (e) {
-      return "Error: $e";
+      // Show snackbar for other errors
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+        ),
+      );
+      return null;
     }
   }
+
     Future<void> signOut() async {
       await auth.signOut();
     }

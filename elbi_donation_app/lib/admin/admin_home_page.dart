@@ -1,3 +1,7 @@
+import 'package:elbi_donation_app/admin/for_approvals.dart';
+import 'package:elbi_donation_app/admin/view_donations.dart';
+import 'package:elbi_donation_app/admin/view_organizations.dart';
+
 import 'view_donors.dart';
 import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +15,20 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    ViewDonorsPage(),
+    ViewOrganizationsPage(),
+    ViewDonationsPage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,74 +44,25 @@ class _AdminHomePageState extends State<AdminHomePage> {
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ListView(
-          children: <Widget>[
-            Card(
-              color: const Color.fromARGB(255, 48, 48, 48),
-              child: Container(
-                height: 100,  
-                child: ListTile(
-                  leading: const Icon(Icons.person, color: Colors.white),
-                  title: const Text(
-                    'Donors',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,  
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ViewDonorsPage()),
-                    );
-                  },
-                ),
-              ),
-            ),
-            SizedBox(height: 16),  
-            Card(
-              color: const Color.fromARGB(255, 48, 48, 48),
-              child: Container(
-                height: 100,  
-                child: ListTile(
-                  leading: const Icon(Icons.business, color: Colors.white),
-                  title: const Text(
-                    'Organizations',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,  
-                    ),
-                  ),
-                  onTap: () {
-                    // Navigate to View Organizations page
-                  },
-                ),
-              ),
-            ),
-            SizedBox(height: 16),  
-            Card(
-              color: const Color.fromARGB(255, 48, 48, 48),
-              child: Container(
-                height: 100,  
-                child: ListTile(
-                  leading: const Icon(Icons.card_giftcard, color: Colors.white),
-                  title: const Text(
-                    'Donations',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,  // Increase the font size
-                    ),
-                  ),
-                  onTap: () {
-                    // Navigate to View Donations page
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Donors',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Organizations',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.card_giftcard),
+            label: 'Donations',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blueAccent,
+        onTap: _onItemTapped,
       ),
       drawer: Drawer(
         child: ListView(
@@ -111,35 +80,17 @@ class _AdminHomePageState extends State<AdminHomePage> {
             ListTile(
               title: const Text('For approvals'),
               onTap: () {
-                // Navigate to approvals page
-              },
-            ),
-            ListTile(
-              title: const Text('View Donors'),
-              onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ViewDonorsPage()),
+                  MaterialPageRoute(builder: (context) => ApprovalsPage()),
                 );
-              },
-            ),
-            ListTile(
-              title: const Text('View Organizations'),
-              onTap: () {
-                // Navigate to View Organizations page
-              },
-            ),
-            ListTile(
-              title: const Text('View Donations'),
-              onTap: () {
-                // Navigate to View Donations page
               },
             ),
             ListTile(
               title: const Text('Logout'),
               onTap: () {
                 context.read<UserAuthProvider>().signOut();
-                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/');
               },
             ),
           ],
