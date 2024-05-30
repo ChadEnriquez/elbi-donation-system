@@ -25,47 +25,50 @@ class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-        stream: context.watch<UserAuthProvider>().userStream,
-        builder: (context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Text("Error encountered! ${snapshot.error}"),
+      body: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color.fromRGBO(230, 212, 184, 1), Color.fromRGBO(199, 177, 152, 1)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 3,
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
               ),
-            );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
+              child: StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else {
+                    if (snapshot.data != null) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return _buildSignInForm();
+                    }
+                  }
+                },
               ),
-            );
-          } else if (!snapshot.hasData) {
-            return _buildSignInForm();
-          } else {
-            // User is already signed in, navigate to the appropriate home page
-            return FutureBuilder<UserRole>(
-              future: _getUserRole(snapshot.data!.email),
-              builder: (context, roleSnapshot) {
-                if (roleSnapshot.connectionState == ConnectionState.waiting) {
-                  return Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                } else if (roleSnapshot.hasError) {
-                  return Scaffold(
-                    body: Center(
-                      child: Text("Error determining role: ${roleSnapshot.error}"),
-                    ),
-                  );
-                } else {
-                  return _navigateToHomePage(roleSnapshot.data!, snapshot.data!.email!);
-                }
-              },
-            );
-          }
-        },
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -73,26 +76,35 @@ class _SignInPageState extends State<SignInPage> {
   Widget _buildSignInForm() {
     return SingleChildScrollView(
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 100, horizontal: 30),
+        margin: const EdgeInsets.symmetric(vertical: 70, horizontal: 30),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Image.asset(
+                'lib/assets/Logo.png',
+                width: 100, 
+                height: 100, 
+              ),
+              const SizedBox(height: 20),
               const Padding(
                 padding: EdgeInsets.only(bottom: 30),
                 child: Text(
-                  "Sign In",
+                  "Title po huhu?",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(bottom: 30),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20), // Add a slight curve
+                    ),
                     labelText: "Email",
                     hintText: "juandelacruz09@gmail.com",
+                    prefixIcon: Icon(Icons.email), // Add email icon
                   ),
                   onSaved: (value) => _email = value,
                   validator: (value) {
@@ -106,10 +118,13 @@ class _SignInPageState extends State<SignInPage> {
               Padding(
                 padding: const EdgeInsets.only(bottom: 30),
                 child: TextFormField(
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20), // Add a slight curve
+                    ),
                     labelText: "Password",
-                    hintText: "******",
+                    hintText: "********",
+                    prefixIcon: Icon(Icons.lock), // Add lock icon
                   ),
                   obscureText: true,
                   onSaved: (value) => _password = value,
@@ -125,12 +140,15 @@ class _SignInPageState extends State<SignInPage> {
                 padding: const EdgeInsets.only(bottom: 30),
                 child: ElevatedButton(
                   onPressed: _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5), // Adjust the radius as needed
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
+                      ),
                     ),
                   ),
-                  child: const Text("Sign In", style: TextStyle(color: Colors.white)),
+                  child: const Text("Sign In", style: TextStyle(color: Colors.black)),
                 ),
               ),
               Padding(
@@ -140,7 +158,7 @@ class _SignInPageState extends State<SignInPage> {
                   children: [
                     const Text(
                       "No account yet?",
-                      style: TextStyle(color: Colors.white), // Optionally, make this text black
+                      style: TextStyle(color: Colors.white), 
                     ),
                     const SizedBox(height: 10.0),
                     ElevatedButton(
@@ -152,14 +170,17 @@ class _SignInPageState extends State<SignInPage> {
                           ),
                         );
                       },
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5), // Adjust the radius as needed
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
+                          ),
                         ),
                       ),
                       child: const Text(
                         "Sign Up",
-                        style: TextStyle(color: Colors.white), // Make text white
+                        style: TextStyle(color: Colors.black), // Set text color to black
                       ),
                     ),
                   ],
@@ -171,6 +192,8 @@ class _SignInPageState extends State<SignInPage> {
       ),
     );
   }
+
+
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -191,6 +214,7 @@ class _SignInPageState extends State<SignInPage> {
           } else {
             // Show Snackbar and reset form
             _showOrganizationNotApprovedSnackbar();
+            context.read<UserAuthProvider>().signOut();
             setState(() {
               _formKey.currentState!.reset();
             });
@@ -218,40 +242,12 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
-
-
   Widget _navigateToHomePage(UserRole userRole, String email) {
     switch (userRole) {
       case UserRole.donor:
         return DonorHomePage();
       case UserRole.organization:
-        return FutureBuilder<bool>(
-          future: _isOrganizationApproved(email),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            } else if (snapshot.hasError) {
-              return Scaffold(
-                body: Center(
-                  child: Text("Error determining organization approval status: ${snapshot.error}"),
-                ),
-              );
-            } else {
-              bool approved = snapshot.data ?? false;
-              if (approved) {
-                return OrgHomePage();
-              } else {
-                // Organization not approved, show Snackbar and return to sign-in page
-                _showOrganizationNotApprovedSnackbar();
-                return _buildSignInForm();
-              }
-            }
-          },
-        );
+        return OrgHomePage();
       case UserRole.admin:
         return AdminHomePage();
       default:

@@ -16,7 +16,7 @@ class FirebaseAuthApi {
     return auth.currentUser;
   }
 
-Future<void> signUp(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
+  Future<void> signUp(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -72,7 +72,7 @@ Future<void> signUp(String email, String password, String name, List<String> add
     }
   }
 
-  Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
+  Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno, String? proofUrl, BuildContext context) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -91,11 +91,20 @@ Future<void> signUp(String email, String password, String name, List<String> add
         'phone': contactno,
         'description': "",
         'status': true,
-        'approval' : false,
-        'proof' : "",
-        'donations' : [],
-        'donationDrives' : [],
+        'approval': false,
+        'proof': proofUrl ?? "",
+        'donations': [],
+        'donationDrives': [],
       });
+
+      // Show Snackbar if proof is missing
+      if (proofUrl == null || proofUrl.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Proof is required for organization registration.'),
+          ),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         // Handle email already in use error
@@ -173,9 +182,7 @@ Future<void> signUp(String email, String password, String name, List<String> add
     }
   }
 
-    Future<void> signOut() async {
-      await auth.signOut();
-    }
-
-    
+  Future<void> signOut() async {
+    await auth.signOut();
+  }
 }
