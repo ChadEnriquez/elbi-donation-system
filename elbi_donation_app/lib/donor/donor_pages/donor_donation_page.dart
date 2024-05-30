@@ -5,8 +5,8 @@ import 'package:elbi_donation_app/model/organization.dart';
 import 'package:flutter/material.dart';
 
 class DonorDonationPage extends StatefulWidget {
-  final List donation;
-  const DonorDonationPage({Key? key, required this.donation}) : super(key: key);
+  final List donationData;
+  const DonorDonationPage({Key? key, required this.donationData}) : super(key: key);
 
   @override
   State<DonorDonationPage> createState() => _DonorDonationPageState();
@@ -15,7 +15,7 @@ class DonorDonationPage extends StatefulWidget {
 class _DonorDonationPageState extends State<DonorDonationPage> {
   @override
   Widget build(BuildContext context) {
-    List donations = widget.donation;
+    List donations = widget.donationData;
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 53, 53, 53),

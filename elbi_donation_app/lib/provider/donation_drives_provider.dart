@@ -8,19 +8,6 @@ import 'package:elbi_donation_app/model/donation.dart';
 import 'package:flutter/material.dart';
 
 
-class DonationsProvider extends ChangeNotifier {
-  FirebaseDonationAPI firebaseServiceD = FirebaseDonationAPI();
-  FirebaseStorageAPI  firebaseServiceS = FirebaseStorageAPI();
-  late Stream<QuerySnapshot> _donations;
-
-  DonationsProvider(){
-    fetchDonations();
-  }
+class DonationDrivesProvider extends ChangeNotifier {
   
-  Stream<QuerySnapshot> get donations => _donations;
-
-  void fetchDonations() {
-    _donations = firebaseServiceD.getDonation();
-    notifyListeners();
-  }
 }

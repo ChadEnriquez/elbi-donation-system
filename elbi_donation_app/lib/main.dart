@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
         } else if (settings.name == '/DonorDonationsPage') {
           final args = settings.arguments as List;
           return MaterialPageRoute(
-            builder: (context) => DonorDonationPage(donation: args),
+            builder: (context) => DonorDonationPage(donationData: args),
           );
         } else if (settings.name == '/DonorDonationDetails') {
           final args = settings.arguments as List;

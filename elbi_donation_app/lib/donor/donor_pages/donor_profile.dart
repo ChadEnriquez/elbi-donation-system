@@ -53,7 +53,7 @@ class _DonorProfileState extends State<DonorProfile> {
             buildUserInfoDisplay(donor.email, "Email"),
             buildUserInfoDisplay(donor.contactno, "Phone"),
             buildUserInfoDisplayArray(donor.address, "Address"),
-            buildUserInfoDonations(donor),
+            buildUserInfoDonations(donor, donorID),
             const SizedBox(height: 50)
           ],
         ),
@@ -151,7 +151,7 @@ class _DonorProfileState extends State<DonorProfile> {
     );
   }
 
-  Widget buildUserInfoDonations(Donor donor) =>
+  Widget buildUserInfoDonations(Donor donor, String donorID) =>
     Padding(
       padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
       child: Column(

@@ -1,10 +1,10 @@
-import 'dart:io';
 
-import 'package:camera/camera.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elbi_donation_app/donor/drawer.dart';
 import 'package:elbi_donation_app/model/donation.dart';
+import 'package:elbi_donation_app/provider/donation_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:provider/provider.dart';
 
 class DonorDonationDetails extends StatefulWidget {
   final List donationData; 
@@ -18,6 +18,7 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
 
   @override
   Widget build(BuildContext context) {
+    final donationID = widget.donationData[0][0];
     final Donation donation = widget.donationData[0][1];
     final org = widget.donationData[1];
     final driveData = widget.donationData[2];
@@ -34,87 +35,153 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Category: ${donation.category.join(', ')}",
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Method: ${donation.method}",
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Weight: ${donation.weight}",
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Date: ${donation.date}",
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              "Time: ${donation.time}",
-              style: const TextStyle(fontSize: 16, color: Colors.white),
-            ),
-            const SizedBox(height: 10),
-            if (donation.method == "Pick-up") showForPickUp(donation),
-            if (donation.photo != "") buttonPhoto(donation.photo),
-            if (donation.qrImg != "") buttonQR(donation.qrImg),
-            // showStatus(donation.status),
-          ],
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("donations").doc(donationID).snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                "Error encountered! ${snapshot.error}",
+                style: const TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),
+              ),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (!snapshot.hasData) {
+            return const Center(
+              child: Text(
+                "No Donations Yet",
+                style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),
+              ),
+            );
+          } else {
+            final donationData = snapshot.data!.data() as Map<String, dynamic>;
+            final donation = Donation.fromJson(donationData);
+            print(donation.status);
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildInfoTile("Organization", org.name),
+                  if (driveData != null) buildInfoTile("Donation Drive", driveData.name),
+                  buildInfoTile("Category", donation.category.join(', ')),
+                  buildInfoTile("Method", donation.method),
+                  buildInfoTile("Weight", donation.weight.toString()),
+                  buildInfoTile("Date", donation.date),
+                  buildInfoTile("Time", donation.time),
+                  if (donation.method == "Pick-up") showForPickUp(donation),
+                  const SizedBox(height: 20,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      buttonPhoto(donation.photo),
+                      buttonQR(donation.qrImg),
+                    ],
+                  ),
+                  const SizedBox(height: 20,),
+                  statusButton(donation.status, donationID),
+                ],
+              ),
+            );
+          }
+        }
+      )
+    );
+  }
+
+  Widget buildInfoTile(String title, String value) {
+    return Card(
+      color: const Color.fromARGB(255, 48, 48, 48),
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: ListTile(
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          value,
+          style: const TextStyle(fontSize: 16, color: Colors.white),
         ),
       ),
     );
   }
 
+  Widget statusButton(String status, String donationID) {
+    if (status == "Pending") {
+      return Center(
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          ),
+          icon: const Icon(Icons.cancel),
+          label: const Text('Cancel Donation', style: TextStyle(fontSize: 15)),
+          onPressed: () {
+            context.read<DonationsProvider>().editStatus(donationID, "Cancelled");
+          },
+        ),
+      );
+    } else {
+      return Center(
+        child: Text(
+          status,
+          style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
+  }
+
+
   Widget showForPickUp(Donation donation) {
     return Column(
       children: [
-        Text("Address: ${donation.address.join(', ')}",style: const TextStyle(fontSize: 16, color: Colors.white),),
-        const SizedBox(height: 10),
-        Text("Phone: ${donation.phone}", style: const TextStyle(fontSize: 16, color: Colors.white),),
-        const SizedBox(height: 10),
+        buildInfoTile("Address", donation.address.join(', ')),
+        buildInfoTile("Phone", donation.phone),
       ],
     );
   }
 
   Widget buttonPhoto(String photoUrl) {
-    return Column(
-      children: [
-        TextButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PhotoPreviewPage(photoUrl: photoUrl)));
-          },
-          child: const Text('Show Image', style: TextStyle(fontSize: 15, color: Colors.white)),
+    return Center(
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         ),
-        const SizedBox(height: 10),
-      ],
+        icon: const Icon(Icons.image),
+        label: const Text('Show Image', style: TextStyle(fontSize: 15)),
+        onPressed: () {
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => PhotoPreviewPage(photoUrl: photoUrl)),
+          );
+        },
+      ),
     );
   }
 
   Widget buttonQR(String qrUrl) {
-    return Column(
-      children: [
-        TextButton(
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => QRPreviewPage(qrUrl: qrUrl)));
-          },
-          child: const Text('Show QR', style: TextStyle(fontSize: 15, color: Colors.white)),
+    return Center(
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         ),
-        const SizedBox(height: 10),
-      ],
+        icon: const Icon(Icons.qr_code),
+        label: const Text('Show QR', style: TextStyle(fontSize: 15)),
+        onPressed: () {
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => QRPreviewPage(qrUrl: qrUrl)),
+          );
+        },
+      ),
     );
   }
-
 }
 
 class PhotoPreviewPage extends StatelessWidget {
@@ -127,7 +194,7 @@ class PhotoPreviewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Photo Preview')),
       body: Center(
-        child: Image.network(photoUrl)
+        child: photoUrl.isEmpty ? const Text("No photo available") : Image.network(photoUrl),
       ),
     );
   }
@@ -143,7 +210,7 @@ class QRPreviewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('QR Preview')),
       body: Center(
-        child: Image.network(qrUrl),
+        child: qrUrl.isEmpty ? const Text("No photo available") : Image.network(qrUrl)
       ),
     );
   }
