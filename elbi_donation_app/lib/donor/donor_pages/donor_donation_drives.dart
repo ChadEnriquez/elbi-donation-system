@@ -2,7 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elbi_donation_app/donor/drawer.dart';
 import 'package:elbi_donation_app/model/donation_drive.dart';
 import 'package:elbi_donation_app/model/organization.dart';
+import 'package:elbi_donation_app/provider/auth_provider.dart';
+import 'package:elbi_donation_app/provider/donor_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DonationDrivesPage extends StatefulWidget {
   final List orgData; 

@@ -210,13 +210,16 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                       onPressed: () async {
                         if(_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
+                          String formattedDate = "${information["date"].year}-${information["date"].month.toString().padLeft(2, '0')}-${information["date"].day.toString().padLeft(2, '0')}";
+                          String formattedTime = "${information["time"].hour.toString().padLeft(2, '0')}:${information["time"].minute.toString().padLeft(2, '0')} ${information["time"].period == DayPeriod.am ? "AM" : "PM"}";
+
                           Donation donation = Donation(
                             category: information["category"], 
                             method: information["donationmethod"], 
                             weight: information["weight"], 
                             photo: "", 
-                            date: information["date"].toString(), 
-                            time: information["time"].toString(), 
+                            date: formattedDate, 
+                            time: formattedTime, 
                             address: information["address"] ?? "", 
                             phone: information["phone"] ?? "", 
                             status: "Pending", 
@@ -247,6 +250,7 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                       onPressed: () {
                         _formKey.currentState!.reset();
                         setState(() {
+
                             information["category"] = <String>[];
                             information["donationmethod"] = "Drop-off";
                             information["weight"] = "";
@@ -350,8 +354,8 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
               information["donationmethod"] = "Drop-off";
               information["weight"] = "";
               information["photo"] = "";
-              information["date"] = DateTime.now();
-              information["time"] = TimeOfDay.now();
+              information["date"] = "";
+              information["time"] = "";
               information["address"] = <String>[];
               information["contactno"] = "";
               information["status"] = "";
