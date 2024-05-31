@@ -35,7 +35,7 @@ class _DonorHomePageState extends State<DonorHomePage> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("organization").where("status", isEqualTo: true).snapshots(),
+        stream: FirebaseFirestore.instance.collection("organization").snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -56,7 +56,9 @@ class _DonorHomePageState extends State<DonorHomePage> {
                   child: ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: ((context, index) {
+                      print(snapshot.data?.docs[index].data());
                       final org = Organization.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
+                  
                       final orgID = snapshot.data?.docs[index].id;
                       final orgData = [orgID, org];
                       return ListTile(

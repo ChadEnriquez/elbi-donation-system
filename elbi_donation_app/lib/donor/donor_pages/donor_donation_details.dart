@@ -82,7 +82,7 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
                     ],
                   ),
                   const SizedBox(height: 20,),
-                  statusButton(donation.status, donationID),
+                  statusButton("Confirmed", donationID),
                 ],
               ),
             );
@@ -110,30 +110,83 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
   }
 
   Widget statusButton(String status, String donationID) {
-    if (status == "Pending") {
-      return Center(
-        child: ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    switch (status) {
+      case "Pending":
+        return Center(
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            icon: const Icon(Icons.cancel),
+            label: const Text('Cancel Donation', style: TextStyle(fontSize: 15)),
+            onPressed: () {
+              context.read<DonationsProvider>().editStatus(donationID, "Cancelled");
+            },
           ),
-          icon: const Icon(Icons.cancel),
-          label: const Text('Cancel Donation', style: TextStyle(fontSize: 15)),
-          onPressed: () {
-            context.read<DonationsProvider>().editStatus(donationID, "Cancelled");
-          },
-        ),
-      );
-    } else {
-      return Center(
-        child: Text(
-          status,
-          style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-      );
+        );
+      case "Cancelled":
+        return Center(
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.grey,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            icon: const Icon(Icons.cancel),
+            label: const Text('Donation Cancelled', style: TextStyle(fontSize: 15)),
+            onPressed: null,
+          ),
+        );
+      case "Confirmed":
+        return Center(
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            icon: const Icon(Icons.check_circle),
+            label: const Text('Confirmed', style: TextStyle(fontSize: 15)),
+            onPressed: () {},
+          ),
+        );
+      case "Scheduled for Pick-up":
+        return Center(
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            icon: const Icon(Icons.schedule),
+            label: const Text('Scheduled for Pick-up', style: TextStyle(fontSize: 15)),
+            onPressed: () {},
+          ),
+        );
+      case "Complete":
+        return Center(
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            ),
+            icon: const Icon(Icons.done),
+            label: const Text('Complete', style: TextStyle(fontSize: 15)),
+            onPressed: () {},
+          ),
+        );
+      default:
+        return Center(
+          child: Text(
+            status,
+            style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        );
+      }
     }
-  }
 
 
   Widget showForPickUp(Donation donation) {
