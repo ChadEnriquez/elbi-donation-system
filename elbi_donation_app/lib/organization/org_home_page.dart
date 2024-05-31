@@ -254,6 +254,16 @@ class OrgDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            title: const Text('Organization Homepage'),
+            onTap: () {
+              Navigator.pop(context); // Close the drawer
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const OrgHomePage()),
+              );
+            },
+          ),
+          ListTile(
             title: const Text('Organization Profile'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
