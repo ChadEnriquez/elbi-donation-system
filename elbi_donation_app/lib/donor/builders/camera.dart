@@ -63,7 +63,7 @@ class _CameraPageState extends State<CameraPage> {
             _cameraController.value.isInitialized
                 ? CameraPreview(_cameraController)
                 : Container(
-                    color: Colors.black,
+                    color: Colors.white,
                     child: const Center(child: CircularProgressIndicator()),
                   ),
             Align(

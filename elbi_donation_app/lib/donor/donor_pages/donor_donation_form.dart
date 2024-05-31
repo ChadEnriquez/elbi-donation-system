@@ -71,11 +71,9 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
     }
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
-      drawer: const DrawerWidget(),
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
-        title: Text(data.name, style: const TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),),
-        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+        backgroundColor: Colors.black,
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -87,18 +85,18 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
               Container(
                 margin:  const EdgeInsets.fromLTRB(30, 5, 30, 5),
                 padding: const EdgeInsets.all(10),
-                child: const Text("DONATION FORM", style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+                child: const Text("DONATION FORM", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(30, 5, 30, 5),
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
-                  border: Border( top: BorderSide(width: 2, color: Colors.white)),
+                  border: Border( top: BorderSide(width: 2, color: Colors.grey)),
                 ),
                 child: Column (
                   children: [
                     const SizedBox(height: 10),
-                    const Text("Type of Donation", style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+                    const Text("Type of Donation", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
                     CheckboxCategory(callback: (selectedCategories) => setState(() => information["category"] = selectedCategories)),
                   ],
                 )
@@ -107,12 +105,12 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                 margin: const EdgeInsets.fromLTRB(30, 5, 30, 5),
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
-                  border: Border( top: BorderSide(width: 2, color: Colors.white)),
+                  border: Border( top: BorderSide(width: 2, color: Colors.grey)),
                 ),
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
-                    const Text("Weight of Donation in KILOGRAM (kg)", style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+                    const Text("Weight of Donation in KILOGRAM (kg)", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     NumberInputField((String weight) {setState(() {information["weight"] = weight;});}),
                     const SizedBox(height: 10),
@@ -123,12 +121,12 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                 margin: const EdgeInsets.fromLTRB(30, 5, 30, 5),
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
-                  border: Border( top: BorderSide(width: 2, color: Colors.white)),
+                  border: Border( top: BorderSide(width: 2, color: Colors.grey)),
                 ),
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
-                    const Text("Date and Time", style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+                    const Text("Date and Time", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     DateAndTime(callback: (selectedDate, selectedTime) => setState(() {
                       information["date"] = selectedDate;
@@ -142,12 +140,12 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                 margin: const EdgeInsets.fromLTRB(30, 5, 30, 5),
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
-                  border: Border( top: BorderSide(width: 2, color: Colors.white), bottom: BorderSide(width: 2, color: Colors.white)),
+                  border: Border( top: BorderSide(width: 2, color: Colors.grey), bottom: BorderSide(width: 2, color: Colors.grey)),
                 ),
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
-                    const Text("Pick-up or Drop-off", style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+                    const Text("Pick-up or Drop-off", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 10),
                     RadiotButton(initValue: information["donationmethod"], callback: (initValue){setState(() {information["donationmethod"] = initValue;});},),
                     const SizedBox(height: 10),
@@ -159,12 +157,12 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                   margin: const EdgeInsets.fromLTRB(30, 5, 30, 5),
                   padding: const EdgeInsets.all(10),
                   decoration: const BoxDecoration(
-                    border: Border( bottom: BorderSide(width: 2, color: Colors.white)),
+                    border: Border( bottom: BorderSide(width: 2, color: Colors.grey)),
                   ),
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
-                      const Text("Phone Number", style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+                      const Text("Phone Number", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 10),
                       PhoneField((PhoneNumber phone) {setState(() {information["contactno"] = phone.phoneNumber as String;});}),
                       const SizedBox(height: 10),
@@ -176,12 +174,12 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                   margin: const EdgeInsets.fromLTRB(30, 5, 30, 5),
                   padding: const EdgeInsets.all(10),
                   decoration: const BoxDecoration(
-                    border: Border( bottom: BorderSide(width: 2, color: Colors.white)),
+                    border: Border( bottom: BorderSide(width: 2, color: Colors.grey)),
                   ),
                   child: Column(
                     children: [
                       const SizedBox(height: 10),
-                      const Text("Address", style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+                      const Text("Address", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 10),
                       AddressTextField(callback: (addresses) => setState(() => information["address"] = addresses)),
                       const SizedBox(height: 10),
@@ -241,7 +239,7 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(Colors.blueAccent), 
                         ),
-                      child: const Text("SUBMIT", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                      child: const Text("SUBMIT", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),),
                     ),
                   ),
                   Container( //RESET BUTTON
@@ -283,7 +281,7 @@ class _DonorDonationFormState extends State<DonorDonationForm> {
 
   Widget createAlertDialogProfile(BuildContext context, Organization org) {
     return AlertDialog(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
+      backgroundColor: Colors.black,
       insetPadding: const EdgeInsets.all(20),
       contentPadding: const EdgeInsets.all(20),
       title: Text(org.name, style: const TextStyle(fontSize: 15, color: Colors.white)),

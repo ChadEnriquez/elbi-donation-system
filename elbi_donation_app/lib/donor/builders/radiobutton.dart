@@ -30,7 +30,7 @@ class _RadiotButtonState extends State<RadiotButton> {
         for (int i = 0; i < _method.length; i++)
           ListTile(
             title: Text(_method[i]),
-            textColor: Colors.white,
+            textColor: Colors.black,
             leading: Radio<String>(
               value: _method[i],
               groupValue: _pick,

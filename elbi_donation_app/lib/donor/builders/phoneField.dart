@@ -18,6 +18,7 @@ class _PhoneFieldState extends State<PhoneField> {
     return Column(
       children: [
         InternationalPhoneNumberInput(
+
           onInputChanged: (PhoneNumber number) {
             setState(() {
               _phoneNumber = number;
@@ -29,14 +30,13 @@ class _PhoneFieldState extends State<PhoneField> {
           ),
           ignoreBlank: false,
           autoValidateMode: AutovalidateMode.disabled,
-          selectorTextStyle: const TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
+          selectorTextStyle: const TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
           initialValue: _phoneNumber,
           inputDecoration: const InputDecoration(
-            labelText: 'Phone Number',
             border: UnderlineInputBorder(),
             hintText: "Enter your Phone Number",
-            labelStyle: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
-            hintStyle: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold),
+            labelStyle: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
+            hintStyle: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
           ),
         )
       ],

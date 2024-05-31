@@ -30,10 +30,10 @@ class _NumberInputFieldState extends State<NumberInputField> {
         border: OutlineInputBorder(),
         hintText: "Enter Weight of donation",
         labelText: "Weight of Donation: ",
-        labelStyle: TextStyle(color: Colors.white),
-        hintStyle: TextStyle(color: Colors.white),
+        labelStyle: TextStyle(color: Colors.black),
+        hintStyle: TextStyle(color: Colors.black),
       ),
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: Colors.black),
     );
   }
 }
@@ -67,11 +67,10 @@ class _AddressTextField extends State<AddressTextField> {
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: "Address",
-                    labelText: "Address: ",
-                    labelStyle: TextStyle(color: Colors.white),
-                    hintStyle: TextStyle(color: Colors.white),
+                    labelStyle: TextStyle(color: Colors.black),
+                    hintStyle: TextStyle(color: Colors.black),
                   ),
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.black),
                 ),
               ),
               IconButton(

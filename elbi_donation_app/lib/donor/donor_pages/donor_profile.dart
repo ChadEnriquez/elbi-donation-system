@@ -28,14 +28,14 @@ class _DonorProfileState extends State<DonorProfile> {
     Donor donor = donorData[1];
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       drawer: const DrawerWidget(),
       appBar: AppBar(
         title: const Text(
           "Donor Profile",
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+        backgroundColor: Colors.black,
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -46,7 +46,7 @@ class _DonorProfileState extends State<DonorProfile> {
             return Center(
               child: Text(
                 "Error encountered! ${snapshot.error}",
-                style: const TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),
+                style: const TextStyle(fontSize: 30, color: Colors.black, fontStyle: FontStyle.italic),
               ),
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
@@ -57,7 +57,7 @@ class _DonorProfileState extends State<DonorProfile> {
             return const Center(
               child: Text(
                 " ",
-                style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),
+                style: TextStyle(fontSize: 30, color: Colors.black, fontStyle: FontStyle.italic),
               ),
             );
           } else {
@@ -71,7 +71,7 @@ class _DonorProfileState extends State<DonorProfile> {
                   const Center(
                     child: CircleAvatar(
                       radius: 75,
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.black,
                       child: CircleAvatar(
                         radius: 70,
                       ),
@@ -107,7 +107,7 @@ class _DonorProfileState extends State<DonorProfile> {
       children: [
         Text(
           title,
-          style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 5),
         InkWell(
@@ -128,7 +128,7 @@ class _DonorProfileState extends State<DonorProfile> {
             ),
             child: Text(
               value,
-              style: const TextStyle(fontSize: 15, color: Colors.white),
+              style: const TextStyle(fontSize: 15, color: Colors.black),
             ),
           ),
         ),
@@ -143,7 +143,7 @@ class _DonorProfileState extends State<DonorProfile> {
     children: [
       Text(
         title,
-        style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
       ),
       const SizedBox(height: 5),
       Column(
@@ -163,7 +163,7 @@ class _DonorProfileState extends State<DonorProfile> {
                       ),
                       child: Text(
                         entry.value,
-                        style: const TextStyle(fontSize: 15, color: Colors.white),
+                        style: const TextStyle(fontSize: 15, color: Colors.black),
                       ),
                     ),
                   ),
@@ -207,7 +207,7 @@ class _DonorProfileState extends State<DonorProfile> {
       children: [
         const Text(
           "Donations",
-          style: TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 5),
         InkWell(
@@ -226,9 +226,9 @@ class _DonorProfileState extends State<DonorProfile> {
               children: [
                 Text(
                   "View Donations",
-                  style: TextStyle(fontSize: 15, color: Colors.white),
+                  style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
-                Icon(Icons.arrow_right_rounded, color: Colors.white),
+                Icon(Icons.arrow_right_rounded, color: Colors.black),
               ],
             ),
           ),
@@ -250,7 +250,7 @@ class _DonorProfileState extends State<DonorProfile> {
   switch (type) {
     case 'Full Name':
       return AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 53, 53, 53),
+        backgroundColor: Colors.black,
         content: Padding(
           padding: const EdgeInsets.only(bottom: 5),
           child: TextFormField(
@@ -322,7 +322,7 @@ class _DonorProfileState extends State<DonorProfile> {
     case 'Address':
       List<String> addresses = List.from(information['address']);
       return AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 53, 53, 53),
+        backgroundColor: Colors.black,
         content: Padding(
           padding: const EdgeInsets.only(bottom: 5),
           child: TextFormField(

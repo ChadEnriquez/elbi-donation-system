@@ -57,40 +57,40 @@ class _CheckboxCategoryState extends State<CheckboxCategory> {
           onChanged: (bool? value) {
             _onCheckboxChanged(value, 1);
           },
-          side: const BorderSide(color: Colors.white),
-          title: const Text('Food', style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+          side: const BorderSide(color: Colors.black),
+          title: const Text('Food', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
         ),
         CheckboxListTile(
           value: checkboxValue2,
           onChanged: (bool? value) {
             _onCheckboxChanged(value, 2);
           },
-          side: const BorderSide(color: Colors.white),
-          title: const Text('Clothes', style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+          side: const BorderSide(color: Colors.black),
+          title: const Text('Clothes', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
         ),
         CheckboxListTile(
           value: checkboxValue3,
           onChanged: (bool? value) {
             _onCheckboxChanged(value, 3);
           },
-          side: const BorderSide(color: Colors.white),
-          title: const Text('Medicine', style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+          side: const BorderSide(color: Colors.black),
+          title: const Text('Medicine', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
         ),
         CheckboxListTile(
           value: checkboxValue4,
           onChanged: (bool? value) {
             _onCheckboxChanged(value, 4);
           },
-          side: const BorderSide(color: Colors.white),
-          title: const Text('Cash', style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+          side: const BorderSide(color: Colors.black),
+          title: const Text('Cash', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
         ),
         CheckboxListTile(
           value: checkboxValue5,
           onChanged: (bool? value) {
             _onCheckboxChanged(value, 5);
           },
-          side: const BorderSide(color: Colors.white),
-          title: const Text('Others', style: TextStyle(fontSize: 15, color: Colors.white, fontWeight: FontWeight.bold)),
+          side: const BorderSide(color: Colors.black),
+          title: const Text('Others', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
         ),
       ],
     );

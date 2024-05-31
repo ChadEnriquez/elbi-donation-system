@@ -73,11 +73,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Color.fromRGBO(199, 177, 152, 1),
               ),
-              child: const Text(
+              child: Text(
                 'Navigation',
                 style: TextStyle(color: Colors.black),
               ),
