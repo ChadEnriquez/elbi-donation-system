@@ -25,4 +25,14 @@ class DonorProvider with ChangeNotifier {
     await donorService.addDonation(donorID, donations);
     notifyListeners();
   }
+
+  void editDonorDetails(String? id, String type, String newdata) async {
+    await donorService.editDonorDetials(id, type, newdata);
+    notifyListeners();
+  }
+
+  void editDonorAddress(String? id, List<String> newdata) async {
+    await donorService.editDonorAddress(id, newdata);
+    notifyListeners();
+  }
 }

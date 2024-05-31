@@ -45,18 +45,20 @@ class _DonorHomePageState extends State<DonorHomePage> {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (!snapshot.hasData) {
+          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(
-              child: Text("No Friends Found", style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic)),
+              child: Text("No Organizations Found", style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic)),
             );
           } else {
             return Column(
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: 1,
+                    itemCount: snapshot.data!.docs.length,
                     itemBuilder: ((context, index) {
+                      print(snapshot.data?.docs[index].data());
                       final org = Organization.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
+                  
                       final orgID = snapshot.data?.docs[index].id;
                       final orgData = [orgID, org];
                       return ListTile(
@@ -97,10 +99,12 @@ class _DonorHomePageState extends State<DonorHomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Text("Address: ${org.address}", style: TextStyle(fontSize: 15, color: Colors.white)),
+            Text("          ${org.description}", style: const TextStyle(fontSize: 15, color: Colors.white)),
+            const SizedBox(height: 10,),
             const Text("Address:", style: TextStyle(fontSize: 15, color: Colors.white)),
             for (var i = 0; i < org.address.length; i++)
               Text("    ${i+1}: ${org.address[i]}", style: const TextStyle(fontSize: 15, color: Colors.white)),
+            const SizedBox(height: 10,),
             Text("Phone Number: ${org.contactno}", style: const TextStyle(fontSize: 15, color: Colors.white)),
           ],
         ),

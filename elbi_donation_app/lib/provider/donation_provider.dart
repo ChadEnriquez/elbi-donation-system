@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 
 
 class DonationsProvider extends ChangeNotifier {
-  FirebaseDonationAPI firebaseServiceD = FirebaseDonationAPI();
-  FirebaseStorageAPI  firebaseServiceS = FirebaseStorageAPI();
+  FirebaseDonationAPI firebaseServiceDonation = FirebaseDonationAPI();
+  FirebaseStorageAPI  firebaseServiceStorage = FirebaseStorageAPI();
   late Stream<QuerySnapshot> _donations;
 
   DonationsProvider(){
@@ -19,33 +19,38 @@ class DonationsProvider extends ChangeNotifier {
   Stream<QuerySnapshot> get donations => _donations;
 
   void fetchDonations() {
-    _donations = firebaseServiceD.getDonation();
+    _donations = firebaseServiceDonation.getDonation();
     notifyListeners();
   }
  
   Future<String> addDonation(Donation donation) async {
-    String id = await firebaseServiceD.addDonation(donation.toJson(donation));
+    String id = await firebaseServiceDonation.addDonation(donation.toJson(donation));
     notifyListeners();
     return id;
   }
 
   Future<String> addQRimg(XFile imageData, String donationID) async {
-    String url = await firebaseServiceS.addQRimg(imageData, donationID);
+    String url = await firebaseServiceStorage.addQRimg(imageData, donationID);
     return url;
   }
 
   void editQRimg(String id, String qrURL) async {
-    await firebaseServiceD.editQRimg(id, qrURL);
+    await firebaseServiceDonation.editQRimg(id, qrURL);
     notifyListeners();
   }
 
   Future<String> addDonationPhoto(XFile imageData, String donationID) async {
-    String url = await firebaseServiceS.addDonationPhoto(imageData, donationID);
+    String url = await firebaseServiceStorage.addDonationPhoto(imageData, donationID);
     return url;
   }
 
   void editDonationPhoto(String id, String qrURL) async {
-    await firebaseServiceD.editDonationPhoto(id, qrURL);
+    await firebaseServiceDonation.editDonationPhoto(id, qrURL);
+    notifyListeners();
+  }
+
+  void editStatus(String id, String status) async {
+    await firebaseServiceDonation.editStatus(id, status);
     notifyListeners();
   }
 }

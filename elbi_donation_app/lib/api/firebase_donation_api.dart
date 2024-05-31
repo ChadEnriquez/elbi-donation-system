@@ -36,4 +36,13 @@ class FirebaseDonationAPI {
       return "Error in ${e.code}: ${e.message}";
     }
   }
+
+  Future<String> editStatus(String? id, String status) async {
+    try {
+        await db.collection("donations").doc(id).update({"status": status});
+      return "Successfully edited status!";
+    } on FirebaseException catch (e) {
+      return "Error in ${e.code}: ${e.message}";
+    }
+  }
 }
