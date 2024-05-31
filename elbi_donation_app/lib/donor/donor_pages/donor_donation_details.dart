@@ -65,7 +65,7 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildInfoTile("Organization", org.name),
-                  if (driveData != null) buildInfoTile("Donation Drive", driveData['name']),
+                  if (driveData != null) buildInfoTile("Donation Drive", driveData["name"]),
                   buildInfoTile("Category", donation.category.join(', ')),
                   buildInfoTile("Method", donation.method),
                   buildInfoTile("Weight", donation.weight.toString()),
