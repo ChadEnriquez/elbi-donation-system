@@ -28,10 +28,8 @@ class _AddressTextField extends State<AddressTextField> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                       labelText: "Address",
-                      labelStyle: TextStyle(color: Colors.white),
                       prefixIcon: Icon(Icons.home),
                     ),
-                    style: const TextStyle(color: Colors.white),
                   ),
                 ),
                 IconButton(
@@ -60,7 +58,7 @@ class _AddressTextField extends State<AddressTextField> {
               ),
             ),
           ),
-          child: const Text("Add Address", style: TextStyle(fontSize: 15, color: Colors.black)),
+          child: const Text("Add Address", style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)),
         ),
         SizedBox(height: 20), // Add some additional space between the button and the address fields
       ],

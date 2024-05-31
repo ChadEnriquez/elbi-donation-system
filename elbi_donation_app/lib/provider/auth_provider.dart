@@ -19,8 +19,8 @@ class UserAuthProvider with ChangeNotifier{
     notifyListeners();
   }
 
-  Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno, String? proofUrl, BuildContext context) async {
-    await authService.signUpOrg(email, password, name, address, contactno, proofUrl, context);
+  Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
+    await authService.signUpOrg(email, password, name, address, contactno, context);
     notifyListeners();
   }
 

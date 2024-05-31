@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 class FirebaseAuthApi {
   late FirebaseAuth auth;
-  FirebaseAuthApi(){
+  FirebaseAuthApi() {
     auth = FirebaseAuth.instance;
   }
 
-  Stream<User?> fetchUser(){
+  Stream<User?> fetchUser() {
     return auth.authStateChanges();
   }
 
@@ -72,7 +72,7 @@ class FirebaseAuthApi {
     }
   }
 
-  Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno, String? proofUrl, BuildContext context) async {
+  Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -92,19 +92,10 @@ class FirebaseAuthApi {
         'description': "",
         'status': true,
         'approval': false,
-        'proof': proofUrl ?? "",
         'donations': [],
         'donationDrives': [],
+        'proof' : "",
       });
-
-      // Show Snackbar if proof is missing
-      if (proofUrl == null || proofUrl.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Proof is required for organization registration.'),
-          ),
-        );
-      }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         // Handle email already in use error
