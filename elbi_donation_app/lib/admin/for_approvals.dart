@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'approval_detail.dart';
 
 class ApprovalsPage extends StatefulWidget {
   const ApprovalsPage({Key? key}) : super(key: key);
@@ -15,14 +16,28 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
   void initState() {
     super.initState();
     // Load the organizations stream with organizations where approval is false
-    _organizationsStream = FirebaseFirestore.instance.collection('organization').where('approval', isEqualTo: false).snapshots();
+    _organizationsStream = FirebaseFirestore.instance
+        .collection('organization')
+        .where('approval', isEqualTo: false)
+        .snapshots();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
-        title: Text('Approvals'),
+        title: Text(
+          'Approvals',
+          style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.black,
+        shadowColor: Colors.grey[300],
+        iconTheme:
+            const IconThemeData(color: Colors.white),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _organizationsStream,
@@ -51,44 +66,33 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
             itemCount: organizations.length,
             itemBuilder: (context, index) {
               final organization = organizations[index];
-              return ExpansionTile(
-                title: Text(organization['name']),
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(10),
-                    padding: EdgeInsets.all(10),
-                    child: organization["proof"].isEmpty ? const Text("No photo available") : Image.network(organization["proof"]),
+              return Card(
+                color: Colors.black,
+                margin: EdgeInsets.all(10),
+                child: ListTile(
+                  title: Text(
+                    organization['name'],
+                    style: TextStyle(color: Colors.white),
                   ),
-                  SwitchListTile(
-                    title: Text('Approval Status'),
-                    value: organization['approval'],
-                    onChanged: (value) {
-                      _updateApprovalStatus(organization.reference, value);
-                    },
+                  subtitle: Text(
+                    organization['email'],
+                    style: TextStyle(color: Colors.grey),
                   ),
-                ],
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ApprovalDetailPage(organization: organization),
+                      ),
+                    );
+                  },
+                ),
               );
             },
           );
         },
       ),
     );
-  }
-
-  Future<void> _updateApprovalStatus(DocumentReference organizationRef, bool newStatus) async {
-    try {
-      await organizationRef.update({'approval': newStatus});
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Approval status updated successfully.'),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to update approval status: $e'),
-        ),
-      );
-    }
   }
 }

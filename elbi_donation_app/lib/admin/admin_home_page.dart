@@ -32,9 +32,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
         title: const Text(
-          "Admin",
+          "Elbination Admin",
           style: TextStyle(
             fontSize: 20,
             color: Colors.white,
@@ -42,26 +43,30 @@ class _AdminHomePageState extends State<AdminHomePage> {
           ),
         ),
         shadowColor: Colors.grey[300],
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Color.fromRGBO(199, 177, 152, 1)), // Black icon color
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black, 
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person, color: Color.fromRGBO(199, 177, 152, 0.567)), 
+            activeIcon: Icon(Icons.person, color: Color.fromRGBO(199, 177, 152, 1)), 
             label: 'Donors',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
+            icon: Icon(Icons.business, color: Color.fromRGBO(199, 177, 152, 0.567)), 
+            activeIcon: Icon(Icons.business, color: Color.fromRGBO(199, 177, 152, 1)), 
             label: 'Organizations',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.card_giftcard),
+            icon: Icon(Icons.card_giftcard, color: Color.fromRGBO(199, 177, 152, 0.567)), 
+            activeIcon: Icon(Icons.card_giftcard, color: Color.fromRGBO(199, 177, 152, 1)), 
             label: 'Donations',
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent,
+        selectedItemColor: Color.fromRGBO(199, 177, 152, 1),
         onTap: _onItemTapped,
       ),
       drawer: Drawer(
@@ -70,11 +75,11 @@ class _AdminHomePageState extends State<AdminHomePage> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 48, 48, 48),
+                color: Color.fromRGBO(199, 177, 152, 1),
               ),
               child: const Text(
                 'Navigation',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.black),
               ),
             ),
             ListTile(
@@ -99,3 +104,4 @@ class _AdminHomePageState extends State<AdminHomePage> {
     );
   }
 }
+

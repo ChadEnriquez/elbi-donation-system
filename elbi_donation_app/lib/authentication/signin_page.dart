@@ -76,7 +76,7 @@ class _SignInPageState extends State<SignInPage> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 30),
                 child: Text(
-                  "Title po huhu?",
+                  "Elbination",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
               ),
@@ -224,23 +224,6 @@ class _SignInPageState extends State<SignInPage> {
           _showSignInErrorMessage = true;
         });
       }
-    }
-  }
-
-  Widget _navigateToHomePage(UserRole userRole, String email) {
-    switch (userRole) {
-      case UserRole.donor:
-        return DonorHomePage();
-      case UserRole.organization:
-        return OrgHomePage();
-      case UserRole.admin:
-        return AdminHomePage();
-      default:
-        return Scaffold(
-          body: Center(
-            child: Text("Unknown role"),
-          ),
-        );
     }
   }
 

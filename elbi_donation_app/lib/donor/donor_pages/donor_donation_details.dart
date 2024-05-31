@@ -24,14 +24,13 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
     final driveData = widget.donationData[2];
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
-      drawer: const DrawerWidget(),
+      backgroundColor: const Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
         title: const Text(
           "Donation Details",
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+        backgroundColor: Colors.black,
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -53,7 +52,7 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
             return const Center(
               child: Text(
                 "No Donations Yet",
-                style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),
+                style: TextStyle(fontSize: 30, color: Colors.black, fontStyle: FontStyle.italic),
               ),
             );
           } else {
@@ -66,7 +65,7 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   buildInfoTile("Organization", org.name),
-                  if (driveData != null) buildInfoTile("Donation Drive", driveData.name),
+                  if (driveData != null) buildInfoTile("Donation Drive", driveData['name']),
                   buildInfoTile("Category", donation.category.join(', ')),
                   buildInfoTile("Method", donation.method),
                   buildInfoTile("Weight", donation.weight.toString()),
@@ -82,7 +81,7 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
                     ],
                   ),
                   const SizedBox(height: 20,),
-                  statusButton("Confirmed", donationID),
+                  statusButton(donation.status, donationID),
                 ],
               ),
             );
@@ -94,7 +93,7 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
 
   Widget buildInfoTile(String title, String value) {
     return Card(
-      color: const Color.fromARGB(255, 48, 48, 48),
+      color: Colors.black,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
         title: Text(
@@ -245,9 +244,16 @@ class PhotoPreviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Photo Preview')),
+      appBar: AppBar(title: const Text('Photo Preview',
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              backgroundColor: Colors.black,
+              shadowColor: Colors.grey[300],
+              iconTheme: const IconThemeData(color: Colors.white),
+          ),
       body: Center(
-        child: photoUrl.isEmpty ? const Text("No photo available") : Image.network(photoUrl),
+        child: photoUrl.isEmpty ? const Text("No photo available", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),) : Image.network(photoUrl),
       ),
     );
   }
