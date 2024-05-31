@@ -10,7 +10,8 @@ class Organization {
   List<String> donationDrives;
   String contactno;
   String proof;
-  bool approval; // Added field
+  bool approval;
+  bool status;
 
   Organization({
     required this.name, 
@@ -22,7 +23,8 @@ class Organization {
     required this.donationDrives,
     required this.contactno,
     required this.proof,
-    required this.approval, // Added field
+    required this.approval, 
+    required this.status
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) {
@@ -36,7 +38,8 @@ class Organization {
     donationDrives: json['donationDrives'] != null ? List<String>.from(json['donationDrives'] ?? []) : [],
     contactno: json['phone'] ?? "",
     proof: json['proof'] ?? "",
-    approval: json['approval'] ?? false,
+    approval: json['approval'],
+    status: json['status']
   );
 }
 
@@ -58,6 +61,7 @@ class Organization {
       'contactno': contactno,
       'proof': proof,
       'approval': approval, 
+      'status': status
     };
   }
 }

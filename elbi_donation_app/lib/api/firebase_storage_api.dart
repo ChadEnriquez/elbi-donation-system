@@ -32,5 +32,17 @@ class FirebaseStorageAPI {
     }
   }
 
+  Future<String> addProofimg(XFile imageData, String orgID) async {
+    try {
+      final file = File(imageData.path);
+      final storageRef = storage.ref().child('orgProof').child('${orgID}_Proof.png');
+      await storageRef.putFile(file);
+      String downloadURL = await storageRef.getDownloadURL();
+      return downloadURL;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return 'Error';
+    }
+  }
   
 }

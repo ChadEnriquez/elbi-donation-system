@@ -56,27 +56,39 @@ class _DonorHomePageState extends State<DonorHomePage> {
                   child: ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: ((context, index) {
-                      print(snapshot.data?.docs[index].data());
                       final org = Organization.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
-                  
                       final orgID = snapshot.data?.docs[index].id;
                       final orgData = [orgID, org];
-                      return ListTile(
-                        title: Text(org.name, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true),
-                        trailing: IconButton(
-                          icon:  const Icon(Icons.account_circle_rounded, color: Colors.white, size: 30,),
-                          onPressed: () {
-                            showDialog(
-                              context: context, 
-                              builder: (BuildContext context) => createAlertDialog(context, org)
-                            );
-                          },
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(context, "/DonationDrivesPage", arguments: orgData);
-                        },
-                      );
-                    }
+                      if (org.status) {
+                          return ListTile(
+                            title: Text(org.name, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true),
+                            trailing: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                 Icon(Icons.account_circle_rounded, color: Colors.white, size: 30,),
+                                 SizedBox(width: 10),
+                                 Icon(Icons.check_circle, color: Colors.green, size: 30), // Open icon
+                              ],
+                            ),
+                            onTap: () {
+                              Navigator.pushNamed(context, "/DonationDrivesPage", arguments: orgData);
+                            },
+                          );
+                        } else {
+                          return ListTile(
+                            title: Text(org.name, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true),
+                            trailing: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                 Icon(Icons.account_circle_rounded, color: Colors.white, size: 30,),
+                                 SizedBox(width: 10),
+                                 Icon(Icons.cancel, color: Colors.red, size: 30), // Closed icon
+                              ],
+                            ),
+                            onTap: null,
+                          );
+                        }
+                      }
                     ),
                   )
                 )

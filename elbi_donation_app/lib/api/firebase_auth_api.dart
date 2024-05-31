@@ -16,7 +16,7 @@ class FirebaseAuthApi {
     return auth.currentUser;
   }
 
-  Future<void> signUp(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
+  Future<String?> signUp(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -35,6 +35,7 @@ class FirebaseAuthApi {
         'contactno': contactno,
         'donations': [],
       });
+      return credential.user!.uid;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         // Handle email already in use error
@@ -72,7 +73,7 @@ class FirebaseAuthApi {
     }
   }
 
-  Future<void> signUpOrg(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
+  Future<String?> signUpOrg(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -96,6 +97,7 @@ class FirebaseAuthApi {
         'donationDrives': [],
         'proof' : "",
       });
+      return credential.user!.uid; 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         // Handle email already in use error
@@ -131,6 +133,7 @@ class FirebaseAuthApi {
         ),
       );
     }
+    return null;
   }
 
   Future<String?> signIn(BuildContext context, String email, String password) async {
@@ -169,7 +172,6 @@ class FirebaseAuthApi {
           content: Text('Error: $e'),
         ),
       );
-      return null;
     }
   }
 
