@@ -23,111 +23,74 @@ class _DonorHomePageState extends State<DonorHomePage> {
     user = context.read<UserAuthProvider>().user;
     context.read<DonorProvider>().getDonor(user!.email);
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       drawer: const DrawerWidget(),
       appBar: AppBar(
-        title: const Text(
-          "List of Organizations",
-          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+        backgroundColor: Colors.black,
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("organization").snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text("Error encountered! ${snapshot.error}", style: const TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),),
-            );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Text("No Organizations Found", style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic)),
-            );
-          } else {
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            color: Color.fromRGBO(199, 177, 152, 1),
+            child: Center(
+              child: Text(
+                "List of Organizations",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: FirebaseFirestore.instance.collection("organization").snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Error encountered! ${snapshot.error}", style: const TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),),
+                  );
+                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text("No Organizations Found", style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic)),
+                  );
+                } else {
+                  return ListView.builder(
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: ((context, index) {
                       final org = Organization.fromJson(snapshot.data?.docs[index].data() as Map<String, dynamic>);
                       final orgID = snapshot.data?.docs[index].id;
                       final orgData = [orgID, org];
-                      if (org.status) {
-                          return ListTile(
-                            title: Text(org.name, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true),
-                            trailing: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                 Icon(Icons.account_circle_rounded, color: Colors.white, size: 30,),
-                                 SizedBox(width: 10),
-                                 Icon(Icons.check_circle, color: Colors.green, size: 30), // Open icon
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.pushNamed(context, "/DonationDrivesPage", arguments: orgData);
-                            },
-                          );
-                        } else {
-                          return ListTile(
-                            title: Text(org.name, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true),
-                            trailing: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                 Icon(Icons.account_circle_rounded, color: Colors.white, size: 30,),
-                                 SizedBox(width: 10),
-                                 Icon(Icons.cancel, color: Colors.red, size: 30), // Closed icon
-                              ],
-                            ),
-                            onTap: null,
-                          );
-                        }
-                      }
-                    ),
-                  )
-                )
-              ],
-            );
-          }
-        },
+                      return Card(
+                        color: Colors.black,
+                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 20.0),
+                        child: ListTile(
+                          leading: Icon(Icons.account_circle_rounded, color: Colors.white, size: 30),
+                          title: Text(org.name, style: TextStyle(fontSize: 20, color: Colors.white), softWrap: true),
+                          subtitle: Text(org.status ? 'Open for Donations' : 'Closed for Donations', style: TextStyle(fontSize: 16, color: org.status ? Colors.green : Colors.red)),
+                          onTap: org.status ? () {
+                            Navigator.pushNamed(context, "/DonationDrivesPage", arguments: orgData);
+                          } : null,
+                        ),
+                      );
+                    }),
+                  );
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
-
-  Widget createAlertDialog(BuildContext context, Organization org) {
-    return AlertDialog(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
-      insetPadding: const EdgeInsets.all(20),
-      contentPadding: const EdgeInsets.all(20),
-      title: Text(org.name, style: const TextStyle(fontSize: 15, color: Colors.white)),
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text("          ${org.description}", style: const TextStyle(fontSize: 15, color: Colors.white)),
-            const SizedBox(height: 10,),
-            const Text("Address:", style: TextStyle(fontSize: 15, color: Colors.white)),
-            for (var i = 0; i < org.address.length; i++)
-              Text("    ${i+1}: ${org.address[i]}", style: const TextStyle(fontSize: 15, color: Colors.white)),
-            const SizedBox(height: 10,),
-            Text("Phone Number: ${org.contactno}", style: const TextStyle(fontSize: 15, color: Colors.white)),
-          ],
-        ),
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, 'Back'),
-          child: const Text('Back', style: TextStyle(fontSize: 15, color: Colors.white)),
-        ),
-      ],
-    );
-  }
-
 }
+
