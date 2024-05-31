@@ -158,7 +158,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                                             softWrap: true,
                                           ),
                                           onTap: () {
-                                            Navigator.pushNamed(context, "/DonorDonationDetails", arguments: data);
+                                            Navigator.pushNamed(context, "/OrgDonationDetailsPage", arguments: data);
                                           },
                                         ),
                                       );
