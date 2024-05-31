@@ -1,17 +1,35 @@
-
 import 'package:elbi_donation_app/organization/org_donation_drive_page.dart';
 import 'package:elbi_donation_app/provider/auth_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'org_profile.dart';
 
-class OrgHomePage extends StatelessWidget {
+class OrgHomePage extends StatefulWidget {
   const OrgHomePage({super.key});
+
+  @override
+  State<OrgHomePage> createState() => _OrgHomePageState();
+}
+
+class _OrgHomePageState extends State<OrgHomePage> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    DonationsList(),
+    OrgDonationDrivePage(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
       appBar: AppBar(
         title: const Text(
           "Organization Homepage",
@@ -22,64 +40,99 @@ class OrgHomePage extends StatelessWidget {
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      drawer: const OrgDrawer(), // Added drawer
-      body: const Column(
-        children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: 10.0),
-              child: Text("List of Donations",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal)),
-            ),
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Homepage',
           ),
-          SizedBox(height: 20.0),
-          OrganizationListItem(
-            orgName: "Donation 1",
-            orgId: "org1Id", // Replace with actual ID from Firestore
-          ),
-          OrganizationListItem(
-            orgName: "Donation 2",
-            orgId: "org2Id", // Replace with actual ID from Firestore
-          ),
-          OrganizationListItem(
-            orgName: "Donation 3",
-            orgId: "org3Id", // Replace with actual ID from Firestore
+          BottomNavigationBarItem(
+            icon: Icon(Icons.drive_eta),
+            label: 'Drives',
           ),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blueAccent,
+        onTap: _onItemTapped,
       ),
+      drawer: const OrgDrawer(),
     );
   }
 }
 
-class OrganizationListItem extends StatelessWidget {
-  final String orgName;
-  final String orgId;
+class DonationsList extends StatelessWidget {
+  const DonationsList({super.key});
 
-  const OrganizationListItem({
+  @override
+  Widget build(BuildContext context) {
+    final User? organization = FirebaseAuth.instance.currentUser;
+
+    if (organization == null) {
+      return const Center(child: Text('No organization logged in'));
+    }
+
+    return StreamBuilder<DocumentSnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('organization')
+          .doc(organization.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+        if (!snapshot.hasData || !snapshot.data!.exists) {
+          return const Center(child: Text('No data found'));
+        }
+
+        List<dynamic> donationIds = snapshot.data!['donations'] ?? [];
+
+        return Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'List of Donations',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                itemCount: donationIds.length,
+                itemBuilder: (context, index) {
+                  String donationId = donationIds[index];
+                  return DonationCard(donationId: donationId);
+                },
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class DonationCard extends StatelessWidget {
+  final String donationId;
+
+  const DonationCard({
+    required this.donationId,
     super.key,
-    required this.orgName,
-    required this.orgId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const OrgProfilePage()),
-          );
-        },
-        child: Card(
-          child: ListTile(
-            title: Text(orgName, textAlign: TextAlign.center),
-          ),
+    return Card(
+      color: Colors.black,
+      child: ListTile(
+        title: Text(
+          'Donation ID: $donationId',
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
       ),
     );
@@ -125,17 +178,18 @@ class OrgDrawer extends StatelessWidget {
               // Navigate to the Donation Drive page
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const OrgDonationDrivePage()),
+                MaterialPageRoute(
+                    builder: (context) => const OrgDonationDrivePage()),
               );
             },
           ),
           ListTile(
-          title: const Text('Logout'),
-          onTap: () {
-            context.read<UserAuthProvider>().signOut();
-            Navigator.pushReplacementNamed(context, '/');
-          },
-        ),
+            title: const Text('Logout'),
+            onTap: () {
+              context.read<UserAuthProvider>().signOut();
+              Navigator.pushReplacementNamed(context, '/');
+            },
+          ),
         ],
       ),
     );

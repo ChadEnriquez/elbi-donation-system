@@ -53,7 +53,7 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
                   document.data() as Map<String, dynamic>;
               return Card(
                 child: ListTile(
-                  title: Center(child: Text(data['name'])), 
+                  title: Center(child: Text(data['name'])),
                   onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
@@ -63,7 +63,7 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
                         ),
                       ),
                     );
-                  }, 
+                  },
                 ),
               );
             }).toList(),
@@ -105,10 +105,19 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
 
           if (driveName != null && driveName.isNotEmpty) {
             final organization = FirebaseAuth.instance.currentUser;
-            await FirebaseFirestore.instance.collection('donation-drives').add({
+            final driveRef = await FirebaseFirestore.instance
+                .collection('donation-drives')
+                .add({
               'name': driveName,
               'organizationID': organization?.uid,
-              'donationID': [], 
+              'donationID': [],
+            });
+
+            await FirebaseFirestore.instance
+                .collection('organization')
+                .doc(organization?.uid)
+                .update({
+              'donationDrives': FieldValue.arrayUnion([driveRef.id]),
             });
 
             setState(() {
