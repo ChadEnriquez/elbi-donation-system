@@ -23,7 +23,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             decoration: BoxDecoration(
                 color: Color.fromRGBO(199, 177, 152, 1),
               ),
-            child: Text("Main Menu", style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold))),
+            child: Text("Main Menu", style: TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold))),
           ListTile(
             onTap: (){
               Navigator.pop(context);

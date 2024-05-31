@@ -78,12 +78,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 color: Color.fromRGBO(199, 177, 152, 1),
               ),
               child: Text(
-                'Navigation',
-                style: TextStyle(color: Colors.black),
-              ),
+                'Admin Menu', style: TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold))
             ),
             ListTile(
-              title: const Text('For approvals'),
+              title: const Text('For approvals', style: TextStyle(fontSize: 20, color: Colors.white)),
               onTap: () {
                 Navigator.push(
                   context,
@@ -92,7 +90,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
               },
             ),
             ListTile(
-              title: const Text('Logout'),
+              title: const Text('Logout', style: TextStyle(fontSize: 20, color: Colors.white)),
               onTap: () {
                 context.read<UserAuthProvider>().signOut();
                 Navigator.pushReplacementNamed(context, '/');

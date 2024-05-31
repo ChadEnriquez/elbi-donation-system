@@ -21,6 +21,7 @@ class OrgProfilePageState extends State<OrgProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
         title: const Text("Organization Profile"),
       ),
@@ -66,7 +67,7 @@ class OrgProfilePageState extends State<OrgProfilePage> {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Text("$orgName", style: const TextStyle(fontSize: 16)),
+                        Text("$orgName", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
                       ],
                     ),
                   ),
@@ -74,7 +75,7 @@ class OrgProfilePageState extends State<OrgProfilePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Description: ${orgDescription ?? 'No Organization Description Yet Found'}",
+                        "Description: ${orgDescription ?? 'No Organization Description Yet Found'}", style: TextStyle(color: Colors.black),
                       ),
                       IconButton(
                         icon: const Icon(Icons.edit),
@@ -83,6 +84,7 @@ class OrgProfilePageState extends State<OrgProfilePage> {
                             context: context,
                             builder: (context) {
                               return AlertDialog(
+                                backgroundColor: Colors.black,
                                 title: const Text("Edit Description"),
                                 content: Form(
                                   key: _formKey,
@@ -127,25 +129,25 @@ class OrgProfilePageState extends State<OrgProfilePage> {
                     ],
                   ),
                   const Divider(
-                    color: Colors.white,
+                    color: Colors.grey,
                     thickness: 1.0,
                   ),
                   const SizedBox(height: 10),
                   Text("Email: ${orgEmail ?? 'No Organization Email Found'}",
-                      style: const TextStyle(fontSize: 16)),
+                      style: const TextStyle(fontSize: 16, color: Colors.black)),
                   const SizedBox(height: 20),
                   Text(
                       "Address: ${orgAddress ?? 'No Organization Address Found'}",
-                      style: const TextStyle(fontSize: 16)),
+                      style: const TextStyle(fontSize: 16, color: Colors.black)),
                   const SizedBox(height: 20),
                   Text(
-                      "Phone: ${orgPhone ?? 'No Organization Phone Number Found'}",
-                      style: const TextStyle(fontSize: 16)),
+                      "Phone: ${orgPhone ?? 'N/A'}",
+                      style: const TextStyle(fontSize: 16, color: Colors.black)),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Still Accepting Donations?', style: TextStyle(fontSize: 16)),
+                      const Text('Still Accepting Donations?', style: TextStyle(fontSize: 16, color: Colors.black)),
                       Switch(
                         value: orgStatus,
                         onChanged: (bool value) {

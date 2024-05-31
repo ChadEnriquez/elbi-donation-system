@@ -310,6 +310,8 @@ Future<void> _openFilePicker(BuildContext context) async {
                 .authService
                 .signUp(email!, password!, name!, address!, contactno!, context);
             
+            Navigator.pushReplacementNamed(context, '/');
+
             if (mounted) Navigator.pop(context);
           }
         },
@@ -323,27 +325,41 @@ Future<void> _openFilePicker(BuildContext context) async {
           ),
         child: const Text('Sign Up', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)));
 
-  Widget get submitButtonOrg => ElevatedButton(
-        onPressed: () async {
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState!.save();
-            var orgID  = await context
-                .read<UserAuthProvider>()
-                .authService
-                .signUpOrg(email!, password!, name!, address!, contactno!, context);
-            String? photoURL = await context.read<OrganizationProvider>().addProofPhoto(file, orgID!);
-            print("Photo URL: $photoURL");
-            context.read<OrganizationProvider>().editProofimg(orgID, photoURL);            
-            if (mounted) Navigator.pop(context);
-          }
-        },
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
-              ),
-            ),
-          ),
-        child: const Text('Sign Up', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)));
+Widget get submitButtonOrg => ElevatedButton(
+  onPressed: () async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      var orgID = await context
+          .read<UserAuthProvider>()
+          .authService
+          .signUpOrg(email!, password!, name!, address!, contactno!, context);
+      String? photoURL = await context.read<OrganizationProvider>().addProofPhoto(file, orgID!);
+      print("Photo URL: $photoURL");
+      context.read<OrganizationProvider>().editProofimg(orgID, photoURL);
+
+      // Show Snackbar here
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Organization is up for approval'),
+        ),
+      );
+
+      Navigator.pushReplacementNamed(context, '/');
+
+      if (mounted) Navigator.pop(context);
+    }
+  },
+  style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+      RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
+      ),
+    ),
+  ),
+  child: const Text(
+    'Sign Up',
+    style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
+  ),
+);
 }
