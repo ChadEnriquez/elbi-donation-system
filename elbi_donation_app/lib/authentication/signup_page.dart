@@ -69,8 +69,8 @@ class _SignUpState extends State<SignUpPage> {
                   child: Text(type.toString().split('.').last),
                 ))
             .toList(),
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           labelText: 'User Type',
         ),
       );
@@ -101,7 +101,7 @@ class _SignUpState extends State<SignUpPage> {
           SizedBox(height: 20),
           nameOrgField,
           SizedBox(height: 20),
-          emailOrgField,
+          emailField,
           SizedBox(height: 20),
           passwordField,
           SizedBox(height: 20),
@@ -119,23 +119,10 @@ class _SignUpState extends State<SignUpPage> {
   }
 
   Widget get emailField => TextFormField(
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           labelText: 'Email',
-        ),
-        onSaved: (value) => setState(() => email = value),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter a valid email';
-          }
-          return null;
-        },
-      );
-  Widget get emailOrgField => TextFormField(
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Email',
-          hintText: 'org@organization.com',
+          prefixIcon: Icon(Icons.email)
         ),
         onSaved: (value) => setState(() => email = value),
         validator: (value) {
@@ -147,9 +134,10 @@ class _SignUpState extends State<SignUpPage> {
       );
 
   Widget get passwordField => TextFormField(
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
+        decoration: InputDecoration(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           labelText: 'Password',
+          prefixIcon: Icon(Icons.lock)
         ),
         obscureText: true,
         onSaved: (value) => setState(() => password = value),
@@ -164,8 +152,11 @@ class _SignUpState extends State<SignUpPage> {
   Widget get nameField => Padding(
         padding: const EdgeInsets.only(bottom: 5),
         child: TextFormField(
-          decoration: const InputDecoration(
-              border: OutlineInputBorder(), label: Text("Name")),
+          decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)), 
+              label: Text("Name"),
+              prefixIcon: Icon(Icons.people)
+              ),
           onSaved: (value) => setState(() => name = value),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -179,9 +170,11 @@ class _SignUpState extends State<SignUpPage> {
   Widget get nameOrgField => Padding(
         padding: const EdgeInsets.only(bottom: 5),
         child: TextFormField(
-          decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              label: Text("Name of Organization")),
+          decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+              label: Text("Name of Organization"),
+              prefixIcon: Icon(Icons.people)
+            ),
           onSaved: (value) => setState(() => name = value),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -195,8 +188,11 @@ class _SignUpState extends State<SignUpPage> {
   Widget get contactField => Padding(
         padding: const EdgeInsets.only(bottom: 5),
         child: TextFormField(
-          decoration: const InputDecoration(
-              border: OutlineInputBorder(), label: Text("Contact number")),
+          decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)), 
+              label: Text("Contact number"),
+              prefixIcon: Icon(Icons.phone)
+            ),
           onSaved: (value) => setState(() => contactno = value),
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -219,7 +215,15 @@ class _SignUpState extends State<SignUpPage> {
             if (mounted) Navigator.pop(context);
           }
         },
-        child: const Text('Sign Up'));
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
+              ),
+            ),
+          ),
+        child: const Text('Sign Up', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)));
 
   Widget get submitButtonOrg => ElevatedButton(
         onPressed: () async {
@@ -233,5 +237,13 @@ class _SignUpState extends State<SignUpPage> {
             if (mounted) Navigator.pop(context);
           }
         },
-        child: const Text('Sign Up'));
+        style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
+              ),
+            ),
+          ),
+        child: const Text('Sign Up', style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold)));
 }

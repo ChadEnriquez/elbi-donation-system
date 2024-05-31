@@ -133,7 +133,7 @@ class OrgDrawer extends StatelessWidget {
           title: const Text('Logout'),
           onTap: () {
             context.read<UserAuthProvider>().signOut();
-            Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, '/');
           },
         ),
         ],

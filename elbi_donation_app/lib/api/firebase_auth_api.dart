@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 class FirebaseAuthApi {
   late FirebaseAuth auth;
-  FirebaseAuthApi(){
+  FirebaseAuthApi() {
     auth = FirebaseAuth.instance;
   }
 
-  Stream<User?> fetchUser(){
+  Stream<User?> fetchUser() {
     return auth.authStateChanges();
   }
 
@@ -16,7 +16,7 @@ class FirebaseAuthApi {
     return auth.currentUser;
   }
 
-Future<void> signUp(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
+  Future<void> signUp(String email, String password, String name, List<String> address, String contactno, BuildContext context) async {
     UserCredential credential;
     try {
       credential = await auth.createUserWithEmailAndPassword(
@@ -91,10 +91,10 @@ Future<void> signUp(String email, String password, String name, List<String> add
         'phone': contactno,
         'description': "",
         'status': true,
-        'approval' : false,
+        'approval': false,
+        'donations': [],
+        'donationDrives': [],
         'proof' : "",
-        'donations' : [],
-        'donationDrives' : [],
       });
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
@@ -173,9 +173,7 @@ Future<void> signUp(String email, String password, String name, List<String> add
     }
   }
 
-    Future<void> signOut() async {
-      await auth.signOut();
-    }
-
-    
+  Future<void> signOut() async {
+    await auth.signOut();
+  }
 }
