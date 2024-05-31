@@ -7,6 +7,19 @@ class FirebaseOrganizationAPI {
     return db.collection("organization").snapshots();
   }
 
+  Future<QuerySnapshot> getOrgbyEmail(String? email) async {
+    try {
+      QuerySnapshot querySnapshot = await db.collection('organization').where('email', isEqualTo: email).get();
+      if (querySnapshot.docs.isNotEmpty) {
+        return querySnapshot;
+      } else {
+        return Future.error('User not found');
+      }
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
   Future<String> addDonation(String orgID, List<String> donations) async {
     try {
         await db.collection("organization").doc(orgID).update({"donations": donations});

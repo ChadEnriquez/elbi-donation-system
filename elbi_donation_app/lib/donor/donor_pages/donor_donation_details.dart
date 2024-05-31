@@ -82,7 +82,7 @@ class _DonorDonationDetailsState extends State<DonorDonationDetails> {
                     ],
                   ),
                   const SizedBox(height: 20,),
-                  statusButton("Confirmed", donationID),
+                  statusButton(donation.status, donationID),
                 ],
               ),
             );

@@ -1,6 +1,10 @@
-import 'package:elbi_donation_app/organization/org_donation_drive_page.dart';
-import 'package:elbi_donation_app/provider/auth_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elbi_donation_app/model/donation.dart';
+import 'package:elbi_donation_app/model/organization.dart';
+import 'package:elbi_donation_app/organization/org_donation_drive_page.dart';
+import 'package:elbi_donation_app/organization/qrscanner.dart';
+import 'package:elbi_donation_app/provider/auth_provider.dart';
+import 'package:elbi_donation_app/provider/organization_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,22 +18,36 @@ class OrgHomePage extends StatefulWidget {
 }
 
 class _OrgHomePageState extends State<OrgHomePage> {
-  int _selectedIndex = 0;
+  bool loading = true;
+  late Future<void> _fetchOrgDataFuture;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    DonationsList(),
-    OrgDonationDrivePage(),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _fetchOrgDataFuture = fetchOrgData();
+  }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  Future<void> fetchOrgData() async {
+    User? user = context.read<UserAuthProvider>().user;
+    if (user != null) {
+      await context.read<OrganizationProvider>().getOrg(user.email);
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    User? user = context.read<UserAuthProvider>().user;
+    context.read<OrganizationProvider>().getOrg(user!.email);
+    List<dynamic> orgData = context.read<OrganizationProvider>().currentOrg;
+    String orgID = orgData[0];
+    Organization org = orgData[1];
+    int donationNumber = 0;
+
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
       appBar: AppBar(
         title: const Text(
           "Organization Homepage",
@@ -40,99 +58,174 @@ class _OrgHomePageState extends State<OrgHomePage> {
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Homepage',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.drive_eta),
-            label: 'Drives',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blueAccent,
-        onTap: _onItemTapped,
-      ),
       drawer: const OrgDrawer(),
+      body: loading ? const Center(child: CircularProgressIndicator())
+          : StreamBuilder(
+              stream: FirebaseFirestore.instance.collection("donations").snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      "Error encountered! ${snapshot.error}",
+                      style: const TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic),
+                    ),
+                  );
+                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      "No Donations Found",
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.white,
+                          fontStyle: FontStyle.italic),
+                    ),
+                  );
+                } else {
+                  return Column(
+                    children: [
+                      const Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                          child: Text("List of Donations",
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.normal)),
+                        ),
+                      ),
+                      const SizedBox(height: 20.0),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            final donationData = snapshot.data!.docs[index].data();
+                            final donation = Donation.fromJson(donationData);
+                            final donationID = snapshot.data!.docs[index].id;
+
+                            if (org.donations.contains(donationID)) {
+                              if (donation.donationDriveID.isEmpty) {
+                                donationNumber++;
+                                final data = [[donationID, donation], org, null];
+                                print(data);
+                                return Card(
+                                  color: const Color.fromARGB(255, 43, 43, 43),
+                                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                  child: ListTile(
+                                    title: Text(
+                                      "Donation $donationNumber",
+                                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                                      softWrap: true,
+                                    ),
+                                    subtitle: const Text(
+                                      "Donation Drive: None",
+                                      style: TextStyle(fontSize: 15, color: Colors.white),
+                                      softWrap: true,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pushNamed(context, "/OrgDonationDetailsPage", arguments: data);
+                                    },
+                                  ),
+                                );
+                              } else {
+                                return StreamBuilder(
+                                  stream: FirebaseFirestore.instance.collection("donation-drives").doc(donation.donationDriveID).snapshots(),
+                                  builder: (context, driveSnapshot) {
+                                    if (driveSnapshot.connectionState == ConnectionState.waiting) {
+                                      return const Center(child: CircularProgressIndicator());
+                                    } else {
+                                      final driveData = driveSnapshot.data!.data() as Map<String, dynamic>;
+                                      final driveName = driveData['name'];
+                                      final data = [[donationID, donation], org, driveData];
+                                      print(data);
+                                      return Card(
+                                        color: const Color.fromARGB(255, 43, 43, 43),
+                                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                        child: ListTile(
+                                          title: Text(
+                                            org.name,
+                                            style: const TextStyle(fontSize: 20, color: Colors.white),
+                                            softWrap: true,
+                                          ),
+                                          subtitle: Text(
+                                            "Donation Drive: $driveName",
+                                            style: const TextStyle(fontSize: 15, color: Colors.white),
+                                            softWrap: true,
+                                          ),
+                                          onTap: () {
+                                            Navigator.pushNamed(context, "/DonorDonationDetails", arguments: data);
+                                          },
+                                        ),
+                                      );
+                                    }
+                                  },
+                                );
+                              }
+                            }
+                            return Container(); // Return an empty container if the donation is not in the org's donations list
+                          },
+                        ),
+                      ),
+                    scanner(),
+                    const SizedBox(height: 20,)
+                    ],
+                  
+                  );
+                }
+              },
+            ),
+    );
+  }
+
+  Widget scanner() {
+    return Center(
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.blue,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        ),
+        icon: const Icon(Icons.qr_code),
+        label: const Text('QR Scanner', style: TextStyle(fontSize: 15)),
+        onPressed: () {
+          Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const OrgScanQRCodePage()),
+          );
+        },
+      ),
     );
   }
 }
 
-class DonationsList extends StatelessWidget {
-  const DonationsList({super.key});
+
+class OrganizationListItem extends StatelessWidget {
+  final String donation;
+  final String? orgId;
+  final VoidCallback? onTap;
+
+  const OrganizationListItem({
+    required this.donation,
+    required this.orgId,
+    this.onTap,
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final User? organization = FirebaseAuth.instance.currentUser;
-
-    if (organization == null) {
-      return const Center(child: Text('No organization logged in'));
-    }
-
-    return StreamBuilder<DocumentSnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('organization')
-          .doc(organization.uid)
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (!snapshot.hasData || !snapshot.data!.exists) {
-          return const Center(child: Text('No data found'));
-        }
-
-        List<dynamic> donationIds = snapshot.data!['donations'] ?? [];
-
-        return Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'List of Donations',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                itemCount: donationIds.length,
-                itemBuilder: (context, index) {
-                  String donationId = donationIds[index];
-                  return DonationCard(donationId: donationId);
-                },
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class DonationCard extends StatelessWidget {
-  final String donationId;
-
-  const DonationCard({
-    required this.donationId,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.black,
-      child: ListTile(
-        title: Text(
-          'Donation ID: $donationId',
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: InkWell(
+        onTap: onTap,
+        child: Card(
+          color: Colors.blueGrey,
+          child: ListTile(
+            title: Text(donation, textAlign: TextAlign.center, style: const TextStyle(color: Colors.white)),
+          ),
         ),
       ),
     );
@@ -164,7 +257,6 @@ class OrgDrawer extends StatelessWidget {
             title: const Text('Organization Profile'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
-              // Navigate to the organization profile page
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const OrgProfilePage()),
@@ -175,11 +267,9 @@ class OrgDrawer extends StatelessWidget {
             title: const Text('Donation Drives'),
             onTap: () {
               Navigator.pop(context); // Close the drawer
-              // Navigate to the Donation Drive page
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => const OrgDonationDrivePage()),
+                MaterialPageRoute(builder: (context) => const OrgDonationDrivePage()),
               );
             },
           ),
