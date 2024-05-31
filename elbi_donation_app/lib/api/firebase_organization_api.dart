@@ -16,4 +16,14 @@ class FirebaseOrganizationAPI {
       return "Error in ${e.code}: ${e.message}";
     }
   }
+
+  Future<String> editProofimg(String id, String data) async {
+    try {
+        await db.collection("organization").doc(id).update({"proof": data});
+        print("Successfully edited QR URL!");
+        return "Successfully edited QR URL!";
+    } on FirebaseException catch (e) {
+      return "Error in ${e.code}: ${e.message}";
+    }
+  }
 }

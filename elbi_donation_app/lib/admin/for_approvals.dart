@@ -57,8 +57,7 @@ class _ApprovalsPageState extends State<ApprovalsPage> {
                   Container(
                     margin: EdgeInsets.all(10),
                     padding: EdgeInsets.all(10),
-                    color: Colors.grey[200],
-                    child: Text('Proof: ${organization['proof']}'), // Temporary container for proof
+                    child: organization["proof"].isEmpty ? const Text("No photo available") : Image.network(organization["proof"]),
                   ),
                   SwitchListTile(
                     title: Text('Approval Status'),

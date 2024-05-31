@@ -1,14 +1,21 @@
 
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:elbi_donation_app/authentication/builders/address_Field.dart';
+import 'package:elbi_donation_app/donor/builders/camera.dart';
 //import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:elbi_donation_app/provider/auth_provider.dart';
+import 'package:elbi_donation_app/provider/organization_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 enum UserType { Donor, Organization}
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
+  const SignUpPage({super.key});
 
   @override
   State<SignUpPage> createState() => _SignUpState();
@@ -23,7 +30,9 @@ class _SignUpState extends State<SignUpPage> {
   String? contactno;
   String? description = "";
   bool status = false;
-  UserType? selectedUserType;
+  UserType? selectedUserType = UserType.Donor;
+  String? filePath;
+  late XFile file;
 
   @override
   Widget build(BuildContext context) {
@@ -79,40 +88,49 @@ class _SignUpState extends State<SignUpPage> {
     switch (userType) {
       case UserType.Donor:
         return [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           nameField,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           emailField,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           passwordField,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           AddressTextField(callback: (value) {
             setState(() {
               address = value;
             });
           }),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           contactField,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           submitButton
         ];
       case UserType.Organization:
         return [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           nameOrgField,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           emailField,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           passwordField,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           AddressTextField(callback: (value) {
             setState(() {
               address = value;
             });
           }),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           contactField,
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
+          fileNameIndicator,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              filePickerButton,
+              cameraButton
+            ],
+          ),
+          const SizedBox(height: 20),
           submitButtonOrg
         ];
     }
@@ -122,7 +140,7 @@ class _SignUpState extends State<SignUpPage> {
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           labelText: 'Email',
-          prefixIcon: Icon(Icons.email)
+          prefixIcon: const Icon(Icons.email)
         ),
         onSaved: (value) => setState(() => email = value),
         validator: (value) {
@@ -137,7 +155,7 @@ class _SignUpState extends State<SignUpPage> {
         decoration: InputDecoration(
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
           labelText: 'Password',
-          prefixIcon: Icon(Icons.lock)
+          prefixIcon: const Icon(Icons.lock)
         ),
         obscureText: true,
         onSaved: (value) => setState(() => password = value),
@@ -154,8 +172,8 @@ class _SignUpState extends State<SignUpPage> {
         child: TextFormField(
           decoration: InputDecoration(
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)), 
-              label: Text("Name"),
-              prefixIcon: Icon(Icons.people)
+              label: const Text("Name"),
+              prefixIcon: const Icon(Icons.people)
               ),
           onSaved: (value) => setState(() => name = value),
           validator: (value) {
@@ -172,8 +190,8 @@ class _SignUpState extends State<SignUpPage> {
         child: TextFormField(
           decoration: InputDecoration(
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              label: Text("Name of Organization"),
-              prefixIcon: Icon(Icons.people)
+              label: const Text("Name of Organization"),
+              prefixIcon:const  Icon(Icons.people)
             ),
           onSaved: (value) => setState(() => name = value),
           validator: (value) {
@@ -190,8 +208,8 @@ class _SignUpState extends State<SignUpPage> {
         child: TextFormField(
           decoration: InputDecoration(
               border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)), 
-              label: Text("Contact number"),
-              prefixIcon: Icon(Icons.phone)
+              label: const Text("Contact number"),
+              prefixIcon: const Icon(Icons.phone)
             ),
           onSaved: (value) => setState(() => contactno = value),
           validator: (value) {
@@ -203,6 +221,86 @@ class _SignUpState extends State<SignUpPage> {
         ),
       );
 
+Future<void> _openFilePicker(BuildContext context) async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        file = XFile(pickedFile.path);;
+        filePath = pickedFile.path;
+      });
+      print('Selected file path: $filePath');
+    } else {
+      // Canceled 
+      print('No file selected');
+    }
+  }
+
+  Widget get filePickerButton {
+    return ElevatedButton.icon(
+      onPressed: () {
+        _openFilePicker(context);
+      },
+      icon: const Icon(Icons.attach_file),
+      label: const Text("Attach Image"),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromRGBO(199, 177, 152, 1), 
+        foregroundColor: Colors.black, 
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+    );
+  }
+
+  Widget get cameraButton {
+    return ElevatedButton.icon(
+      onPressed: () async {
+        await availableCameras().then((value) => Navigator.push(context,
+          MaterialPageRoute(builder: (_) => CameraPage(
+            callback:(imageFile) 
+            {setState(() {
+               file = imageFile;
+               filePath = file.path;
+            });}, 
+            cameras: value)
+            )
+          )
+        );
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromRGBO(199, 177, 152, 1), 
+        foregroundColor: Colors.black, 
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+      icon: const Icon(Icons.camera_alt_rounded),
+      label: const Text("Take Picture"),
+    );
+  }
+
+  Widget get fileNameIndicator {
+    if (filePath != null) {
+      return Text(
+        "Selected file: ${filePath!.split('/').last}", // File name only
+        style: const TextStyle(
+          color: Color.fromRGBO(221, 255, 254, 1),
+          fontWeight: FontWeight.bold,
+        ),
+      );
+    } else {
+      return const Text(
+        "Please attach the proof of legitimacy", // Prompt text
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      );
+    }
+  }
+
   Widget get submitButton => ElevatedButton(
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
@@ -211,12 +309,12 @@ class _SignUpState extends State<SignUpPage> {
                 .read<UserAuthProvider>()
                 .authService
                 .signUp(email!, password!, name!, address!, contactno!, context);
-            // check if the widget hasn't been disposed of after an asynchronous action
+            
             if (mounted) Navigator.pop(context);
           }
         },
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
+            backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15), // Adjust the radius as needed
@@ -229,16 +327,18 @@ class _SignUpState extends State<SignUpPage> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
-            await context
+            var orgID  = await context
                 .read<UserAuthProvider>()
                 .authService
                 .signUpOrg(email!, password!, name!, address!, contactno!, context);
-            // check if the widget hasn't been disposed of after an asynchronous action
+            String? photoURL = await context.read<OrganizationProvider>().addProofPhoto(file, orgID!);
+            print("Photo URL: $photoURL");
+            context.read<OrganizationProvider>().editProofimg(orgID, photoURL);            
             if (mounted) Navigator.pop(context);
           }
         },
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
+            backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(199, 177, 152, 1)), // Set button color to beige
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15), // Adjust the radius as needed

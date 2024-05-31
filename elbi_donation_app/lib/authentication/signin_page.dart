@@ -50,22 +50,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                 ],
               ),
-              child: StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.authStateChanges(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text("Error: ${snapshot.error}"));
-                  } else {
-                    if (snapshot.data != null) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else {
-                      return _buildSignInForm();
-                    }
-                  }
-                },
-              ),
+              child: _buildSignInForm()
             ),
           ),
         ),
