@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elbi_donation_app/donor/drawer.dart';
 import 'package:elbi_donation_app/model/donation.dart';
+import 'package:elbi_donation_app/organization/org_home_page.dart';
 import 'package:elbi_donation_app/provider/donation_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,7 +26,7 @@ class _OrgDonationDetailsState extends State<OrgDonationDetails> {
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 53, 53, 53),
-      drawer: const DrawerWidget(),
+      drawer: const OrgDrawer(),
       appBar: AppBar(
         title: const Text(
           "Donation Details",
