@@ -25,4 +25,29 @@ class FirebaseDonorAPI {
       return "Error in ${e.code}: ${e.message}";
     }
   }
+
+  Future<String> editDonorDetials(String? id, String type, String newdata) async {
+    try {
+      switch (type) {
+        case 'name':
+          await db.collection("donors").doc(id).update({"name": newdata});
+        case 'phone':
+          await db.collection("donors").doc(id).update({"phone": newdata});
+      }
+      print("Successfully edited $type!");
+      return "Successfully edited $type!";
+    } on FirebaseException catch (e) {
+      return "Error in ${e.code}: ${e.message}";
+    }
+  }
+
+  Future<String> editDonorAddress(String? id, List<String> newdata) async {
+    try {
+      await db.collection("donors").doc(id).update({"address": newdata});
+      print("Successfully edited address!");
+      return "Successfully edited address!";
+    } on FirebaseException catch (e) {
+      return "Error in ${e.code}: ${e.message}";
+    }
+  }
 }

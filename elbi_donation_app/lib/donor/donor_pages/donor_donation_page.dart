@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class DonorDonationPage extends StatefulWidget {
   final List donationData;
-  const DonorDonationPage({Key? key, required this.donationData}) : super(key: key);
+  const DonorDonationPage({super.key, required this.donationData});
 
   @override
   State<DonorDonationPage> createState() => _DonorDonationPageState();
@@ -23,7 +23,7 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
       appBar: AppBar(
         title: const Text(
           "Donations",
-          style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: const Color.fromARGB(255, 48, 48, 48),
         shadowColor: Colors.grey[300],
@@ -73,12 +73,24 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
                               final org = Organization.fromJson(orgData);
                               final data = [[donationID, donation], org, null];
                               if (donation.donationDriveID.isEmpty) {
-                                return ListTile(
-                                  title: Text(org.name, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true,),
-                                  subtitle: const Text("Donation Drive: None", style: TextStyle(fontSize: 15, color: Colors.white), softWrap: true,),
-                                  onTap: () {
-                                          Navigator.pushNamed(context, "/DonorDonationDetails", arguments: data);
-                                  },
+                                return Card(
+                                  color: const Color.fromARGB(255, 43, 43, 43),
+                                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                  child: ListTile(
+                                    title: Text(
+                                      org.name,
+                                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                                      softWrap: true,
+                                    ),
+                                    subtitle: const Text(
+                                      "Donation Drive: None",
+                                      style: TextStyle(fontSize: 15, color: Colors.white),
+                                      softWrap: true,
+                                    ),
+                                    onTap: () {
+                                      Navigator.pushNamed(context, "/DonorDonationDetails", arguments: data);
+                                    },
+                                  ),
                                 );
                               } else {
                                 return StreamBuilder(
@@ -92,12 +104,24 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
                                       final driveData = driveSnapshot.data!.data() as Map<String, dynamic>;
                                       final driveName = driveData['name'];
                                       final data = [[donationID, donation], org, driveData];
-                                      return ListTile(
-                                        title: Text(org.name, style: const TextStyle(fontSize: 20, color: Colors.white), softWrap: true,),
-                                        subtitle: Text("Donation Drive: $driveName", style: const TextStyle(fontSize: 15, color: Colors.white), softWrap: true,),
-                                        onTap: () {
-                                          Navigator.pushNamed(context, "/DonorDonationDetails", arguments: data);
-                                        },
+                                      return Card(
+                                        color: const Color.fromARGB(255, 43, 43, 43),
+                                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                        child: ListTile(
+                                          title: Text(
+                                            org.name,
+                                            style: const TextStyle(fontSize: 20, color: Colors.white),
+                                            softWrap: true,
+                                          ),
+                                          subtitle: Text(
+                                            "Donation Drive: $driveName",
+                                            style: const TextStyle(fontSize: 15, color: Colors.white),
+                                            softWrap: true,
+                                          ),
+                                          onTap: () {
+                                            Navigator.pushNamed(context, "/DonorDonationDetails", arguments: data);
+                                          },
+                                        ),
                                       );
                                     }
                                   },
@@ -117,6 +141,10 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    ),
                     child: const Text("Back", style: TextStyle(fontSize: 15, color: Colors.white)),
                   ),
                 ),

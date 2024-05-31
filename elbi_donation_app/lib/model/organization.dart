@@ -10,6 +10,7 @@ class Organization {
   List<String> donationDrives;
   String contactno;
   String proof;
+  bool approval; // Added field
 
   Organization({
     required this.name, 
@@ -20,29 +21,32 @@ class Organization {
     required this.donations,
     required this.donationDrives,
     required this.contactno,
-    required this.proof
+    required this.proof,
+    required this.approval, // Added field
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) {
-    return Organization(
-      name: json['name'], 
-      email: json['email'],
-      password: "",  
-      description: json['description'], 
-      address: List<String>.from(json['address']),
-      donations: List<String>.from(json['donations']),
-      donationDrives: List<String>.from(json['donationDrives']),
-      contactno: json['phone'],
-      proof: json['proof']
-    );
-  }
+  return Organization(
+    name: json['name'] ?? "", 
+    email: json['email'] ?? "",
+    password: "",  
+    description: json['description'] ?? "", 
+    address: json['address'] != null ? List<String>.from(json['address'] ?? []) : [],
+    donations: json['donations'] != null ? List<String>.from(json['donations'] ?? []) : [],
+    donationDrives: json['donationDrives'] != null ? List<String>.from(json['donationDrives'] ?? []) : [],
+    contactno: json['phone'] ?? "",
+    proof: json['proof'] ?? "",
+    approval: json['approval'] ?? false,
+  );
+}
+
 
   static List<Organization> fromJsonArray(String jsonData) {
     Iterable<dynamic> data = jsonDecode(jsonData);
     return data.map<Organization>((dynamic d) => Organization.fromJson(d)).toList();
   }
 
-  Map<String, dynamic> toJson(Organization organization) {
+  Map<String, dynamic> toJson(Organization organization) { 
     return {
       'name': name,
       'email': email,
@@ -52,7 +56,8 @@ class Organization {
       'donations': donations,
       'donation_drives': donationDrives,
       'contactno': contactno,
-      'proof': proof
+      'proof': proof,
+      'approval': approval, 
     };
   }
 }
