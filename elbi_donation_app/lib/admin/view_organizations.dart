@@ -14,9 +14,7 @@ class ViewOrganizationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Organizations List'),
-      ),
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       body: FutureBuilder<List<Organization>>(
         future: _fetchOrganizations(),
         builder: (context, snapshot) {
@@ -27,26 +25,43 @@ class ViewOrganizationsPage extends StatelessWidget {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('No organizations found'));
           } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final organization = snapshot.data![index];
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: ListTile(
-                    title: Text(organization.name),
-                    subtitle: Text(organization.email),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => OrganizationDetailsPage(organization: organization),
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  color: Color.fromRGBO(199, 177, 152, 1),
+                  child: Center(
+                    child: Text(
+                      "List of Organizations",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded (
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      final organization = snapshot.data![index];
+                      return Card(
+                        color: Colors.black,
+                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 40.0),
+                        child: ListTile(
+                          title: Text(organization.name),
+                          subtitle: Text(organization.email),
+                          onTap: () {
+                            Navigator.push(context,MaterialPageRoute(builder: (context) => OrganizationDetailsPage(organization: organization),),);
+                          },
                         ),
                       );
                     },
                   ),
-                );
-              },
+                ),
+              ],
             );
           }
         },

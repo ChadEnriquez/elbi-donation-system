@@ -10,8 +10,15 @@ class OrganizationDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
-        title: const Text('Organization Details'),
+        title: const Text('Organization Details',
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.black,
+        shadowColor: Colors.grey[300],
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -21,7 +28,7 @@ class OrganizationDetailsPage extends StatelessWidget {
             buildInfoCard('Name', organization.name, context),
             buildInfoCard('Email', organization.email, context),
             buildInfoCard('Description', organization.description, context),
-            buildInfoCard('Address', organization.address.join(", "), context),
+            buildInfoCard('Address', organization.address.join("\n"), context),
             buildInfoCard('Contact Number', organization.contactno, context),
             SizedBox(height: 20),
             Center(
@@ -56,6 +63,7 @@ class OrganizationDetailsPage extends StatelessWidget {
   return Container(
     width: MediaQuery.of(context).size.width, // Set width to screen width
     child: Card(
+      color: Colors.black,
       elevation: 4,
       margin: EdgeInsets.symmetric(vertical: 8),
       child: Padding(
@@ -65,7 +73,7 @@ class OrganizationDetailsPage extends StatelessWidget {
           children: [
             Text(
               title,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 5),
             Text(
@@ -83,12 +91,12 @@ class OrganizationDetailsPage extends StatelessWidget {
     return Center(
       child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
+          backgroundColor: Colors.grey,
+          foregroundColor: Colors.black,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         ),
         icon: const Icon(Icons.image),
-        label: const Text('Show Image', style: TextStyle(fontSize: 10)),
+        label: const Text('Proof of Legitimacy', style: TextStyle(fontSize: 10, color: Colors.black)),
         onPressed: () {
           Navigator.push(context,
             MaterialPageRoute(builder: (context) => PhotoPreviewPage(photoUrl: photoUrl)),
@@ -104,7 +112,7 @@ class OrganizationDetailsPage extends StatelessWidget {
         return Center(
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
+              backgroundColor: Colors.red,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),

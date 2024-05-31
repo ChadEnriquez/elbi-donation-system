@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:elbi_donation_app/donor/drawer.dart';
 import 'package:elbi_donation_app/model/donation.dart';
 import 'package:elbi_donation_app/model/organization.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +17,13 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
     List donations = widget.donationData;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
-      drawer: const DrawerWidget(),
+      backgroundColor: const Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
         title: const Text(
           "Donations",
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+        backgroundColor: Colors.black,
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -47,7 +45,7 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
             return const Center(
               child: Text(
                 "No Donations Yet",
-                style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),
+                style: TextStyle(fontSize: 30, color: Colors.black, fontStyle: FontStyle.italic),
               ),
             );
           } else {
@@ -74,12 +72,12 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
                               final data = [[donationID, donation], org, null];
                               if (donation.donationDriveID.isEmpty) {
                                 return Card(
-                                  color: const Color.fromARGB(255, 43, 43, 43),
+                                  color: Colors.black,
                                   margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                   child: ListTile(
                                     title: Text(
                                       org.name,
-                                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                                      style: const TextStyle(fontSize: 18, color: Colors.white),
                                       softWrap: true,
                                     ),
                                     subtitle: const Text(
@@ -105,12 +103,12 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
                                       final driveName = driveData['name'];
                                       final data = [[donationID, donation], org, driveData];
                                       return Card(
-                                        color: const Color.fromARGB(255, 43, 43, 43),
+                                        color: Colors.black,
                                         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                         child: ListTile(
                                           title: Text(
                                             org.name,
-                                            style: const TextStyle(fontSize: 20, color: Colors.white),
+                                            style: const TextStyle(fontSize: 18, color: Colors.white),
                                             softWrap: true,
                                           ),
                                           subtitle: Text(
@@ -133,19 +131,6 @@ class _DonorDonationPageState extends State<DonorDonationPage> {
                       }
                       return const SizedBox(); // Placeholder for other cases
                     },
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 48, 48, 48),
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    ),
-                    child: const Text("Back", style: TextStyle(fontSize: 15, color: Colors.white)),
                   ),
                 ),
               ],
