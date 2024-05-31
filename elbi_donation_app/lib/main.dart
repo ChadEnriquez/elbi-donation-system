@@ -1,5 +1,6 @@
 
 import 'package:elbi_donation_app/admin/admin_home_page.dart';
+import 'package:elbi_donation_app/admin/details/donations_detail.dart';
 import 'package:elbi_donation_app/authentication/signin_page.dart';
 import 'package:elbi_donation_app/donor/donor_pages/donor_donation_details.dart';
 import 'package:elbi_donation_app/donor/donor_pages/donor_donation_drives.dart';
@@ -81,8 +82,12 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(
             builder: (context) => OrgDonationDetails(donationData: args),
           );
+        } else if (settings.name == '/AdminDonationDetails') {
+          final args = settings.arguments as List;
+          return MaterialPageRoute(
+            builder: (context) => AdminDonationDetails(donationData: args),
+          );
         }
-        
        return null;
       },
       theme: ThemeData.dark()

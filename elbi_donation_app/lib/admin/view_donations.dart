@@ -1,3 +1,4 @@
+import 'package:elbi_donation_app/model/organization.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elbi_donation_app/model/donation.dart';
@@ -47,17 +48,58 @@ class ViewDonationsPage extends StatelessWidget {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final donation = snapshot.data![index];
-                      return Card(
-                        color: Colors.black,
-                        margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 40.0),
-                        child: ListTile(
-                          title: Text('Donation ID: ${index + 1}'),
-                          subtitle: Text('Method: ${donation.method}'),
-                          onTap: () {
-                            //panavigate po papuntang DonorDonationDetails HUHUbBELLS
+                      return StreamBuilder(
+                          stream: FirebaseFirestore.instance.collection("organization").doc(donation.orgID).snapshots(),
+                          builder: (context, orgSnapshot) {
+                            if (orgSnapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else {
+                              final orgData = orgSnapshot.data!.data() as Map<String, dynamic>;
+                              final org = Organization.fromJson(orgData);
+                              final data = [donation, org, null];
+                              if (donation.donationDriveID.isEmpty) {
+                                return Card(
+                                  color: Colors.black,
+                                  margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 40.0),
+                                  child: ListTile(
+                                    title: Text('Donation ID: ${index + 1}'),
+                                    subtitle: Text('Method: ${donation.method}'),
+                                    onTap: () {
+                                      Navigator.pushNamed(context, "/AdminDonationDetails", arguments: data);
+                                    },
+                                  ),
+                                );
+                              } else {
+                                return StreamBuilder(
+                                  stream: FirebaseFirestore.instance.collection("donation-drives").doc(donation.donationDriveID).snapshots(),
+                                  builder: (context, driveSnapshot) {
+                                    if (driveSnapshot.connectionState == ConnectionState.waiting) {
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
+                                      );
+                                    } else {
+                                      final driveData = driveSnapshot.data!.data() as Map<String, dynamic>;
+                                      final data = [donation, org, driveData];
+                                      return Card(
+                                        color: Colors.black,
+                                        margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 40.0),
+                                        child: ListTile(
+                                          title: Text('Donation ID: ${index + 1}'),
+                                          subtitle: Text('Method: ${donation.method}'),
+                                          onTap: () {
+                                            Navigator.pushNamed(context, "/AdminDonationDetails", arguments: data);
+                                          },
+                                        ),
+                                      );
+                                    }
+                                  },
+                                );
+                              }
+                            }
                           },
-                        ),
-                      );
+                        );
                     },
                   ),
                 ),
