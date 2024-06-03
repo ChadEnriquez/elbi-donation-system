@@ -25,14 +25,13 @@ class _OrgDonationDetailsState extends State<OrgDonationDetails> {
     final driveData = widget.donationData[2];
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
-      drawer: const OrgDrawer(),
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
         title: const Text(
           "Donation Details",
           style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+        backgroundColor: Colors.black,
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -43,7 +42,7 @@ class _OrgDonationDetailsState extends State<OrgDonationDetails> {
             return Center(
               child: Text(
                 "Error encountered! ${snapshot.error}",
-                style: const TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),
+                style: const TextStyle(fontSize: 30, color: Colors.black, fontStyle: FontStyle.italic),
               ),
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
@@ -54,7 +53,7 @@ class _OrgDonationDetailsState extends State<OrgDonationDetails> {
             return const Center(
               child: Text(
                 "No Donations Yet",
-                style: TextStyle(fontSize: 30, color: Colors.white, fontStyle: FontStyle.italic),
+                style: TextStyle(fontSize: 30, color: Colors.black, fontStyle: FontStyle.italic),
               ),
             );
           } else {
@@ -78,7 +77,7 @@ class _OrgDonationDetailsState extends State<OrgDonationDetails> {
                   Row (
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const Text("Status:", style: TextStyle(fontSize: 20, color: Colors.white)),
+                      const Text("Status:", style: TextStyle(fontSize: 20, color: Colors.black)),
                       statusButton(donation.status, donationID),
                     ],
                   ),
@@ -102,7 +101,7 @@ class _OrgDonationDetailsState extends State<OrgDonationDetails> {
 
   Widget buildInfoTile(String title, String value) {
     return Card(
-      color: const Color.fromARGB(255, 48, 48, 48),
+      color: Colors.black,
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
         title: Text(
@@ -136,6 +135,7 @@ class _OrgDonationDetailsState extends State<OrgDonationDetails> {
               context: context,
               builder: (context) {
                 return AlertDialog(
+                  backgroundColor: Colors.black,
                   title: const Text('Update Status'),
                   content: DropdownButton<String>(
                     value: selectedStatus,
@@ -215,6 +215,7 @@ class _OrgDonationDetailsState extends State<OrgDonationDetails> {
               context: context,
               builder: (context) {
                 return AlertDialog(
+                  backgroundColor: Colors.black,
                   title: const Text('Update Status'),
                   content: DropdownButton<String>(
                     value: selectedStatus,

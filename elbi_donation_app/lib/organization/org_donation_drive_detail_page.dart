@@ -24,6 +24,7 @@ class DonationDriveDetailPageState extends State<DonationDriveDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
         title: Text(driveName, textAlign: TextAlign.center),
       ),
@@ -69,6 +70,7 @@ class DonationDriveDetailPageState extends State<DonationDriveDetailPage> {
                 builder: (BuildContext context) {
                   final controller = TextEditingController(text: driveName);
                   return AlertDialog(
+                    backgroundColor: Colors.black,
                     title: const Text('Edit Donation Drive Name'),
                     content: TextField(
                       controller: controller,
@@ -116,6 +118,7 @@ class DonationDriveDetailPageState extends State<DonationDriveDetailPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    backgroundColor: Colors.black,
                     title: const Text('Confirm Delete'),
                     content: const Text(
                         'Are you sure you want to delete this donation drive?'),

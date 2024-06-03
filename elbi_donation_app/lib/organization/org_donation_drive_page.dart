@@ -23,6 +23,7 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
   Widget build(BuildContext context) {
     final organization = FirebaseAuth.instance.currentUser;
     return Scaffold(
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
         title: const Text('Donation Drives'),
       ),
@@ -52,6 +53,7 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
               Map<String, dynamic> data =
                   document.data() as Map<String, dynamic>;
               return Card(
+                color: Colors.black,
                 child: ListTile(
                   title: Center(child: Text(data['name'])),
                   onTap: () {
@@ -77,6 +79,7 @@ class OrgDonationDrivePageState extends State<OrgDonationDrivePage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
+                backgroundColor: Colors.black,
                 title: const Text('New Donation Drive'),
                 content: TextField(
                   controller: controller,

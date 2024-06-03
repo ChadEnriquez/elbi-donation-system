@@ -47,14 +47,9 @@ class _OrgHomePageState extends State<OrgHomePage> {
     int donationNumber = 0;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 53, 53, 53),
+      backgroundColor: Color.fromRGBO(199, 177, 152, 1),
       appBar: AppBar(
-        title: const Text(
-          "Organization Homepage",
-          style: TextStyle(
-              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: const Color.fromARGB(255, 48, 48, 48),
+        backgroundColor: Colors.black,
         shadowColor: Colors.grey[300],
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -69,7 +64,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                       "Error encountered! ${snapshot.error}",
                       style: const TextStyle(
                           fontSize: 30,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontStyle: FontStyle.italic),
                     ),
                   );
@@ -81,7 +76,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                       "No Donations Found",
                       style: TextStyle(
                           fontSize: 30,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontStyle: FontStyle.italic),
                     ),
                   );
@@ -94,9 +89,9 @@ class _OrgHomePageState extends State<OrgHomePage> {
                           padding: EdgeInsets.only(top: 10.0),
                           child: Text("List of Donations",
                               style: TextStyle(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.normal)),
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold)),
                         ),
                       ),
                       const SizedBox(height: 20.0),
@@ -114,7 +109,7 @@ class _OrgHomePageState extends State<OrgHomePage> {
                                 final data = [[donationID, donation], org, null];
                                 print(data);
                                 return Card(
-                                  color: const Color.fromARGB(255, 43, 43, 43),
+                                  color: Colors.black,
                                   margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                                   child: ListTile(
                                     title: Text(
@@ -243,18 +238,19 @@ class OrgDrawer extends StatelessWidget {
         children: <Widget>[
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Color.fromRGBO(199, 177, 152, 1),
             ),
             child: Text(
-              'Organization Menu',
+              'Main Menu',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 24,
+                fontWeight: FontWeight.bold
               ),
             ),
           ),
           ListTile(
-            title: const Text('Organization Homepage'),
+            title: const Text('Organization Homepage', style: TextStyle(fontSize: 20, color: Colors.white)),
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(
@@ -264,7 +260,7 @@ class OrgDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Organization Profile'),
+            title: const Text('Organization Profile', style: TextStyle(fontSize: 20, color: Colors.white)),
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(
@@ -274,7 +270,7 @@ class OrgDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            title: const Text('Donation Drives'),
+            title: const Text('Donation Drives', style: TextStyle(fontSize: 20, color: Colors.white)),
             onTap: () {
               Navigator.pop(context); // Close the drawer
               Navigator.push(
